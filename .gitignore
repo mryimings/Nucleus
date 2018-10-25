@@ -89,6 +89,9 @@ celerybeat-schedule
 # SageMath parsed files
 *.sage.py
 
+# crawler stuff
+wiki_crawler
+
 # Environments
 .env
 .venv
