@@ -4,7 +4,6 @@ import os
 import numpy as np
 import ujson as json
 
-
 from func import cudnn_gru, native_gru, dot_attention, summ, ptr_net
 from prepro import word_tokenize, convert_idx
 
@@ -15,7 +14,7 @@ char_limit = 16
 hidden = 75
 char_dim = 8
 char_hidden = 100
-use_cudnn = True
+use_cudnn = False
 
 # File path
 target_dir = "data"
@@ -24,7 +23,6 @@ word_emb_file = os.path.join(target_dir, "word_emb.json")
 char_emb_file = os.path.join(target_dir, "char_emb.json")
 word2idx_file = os.path.join(target_dir, "word2idx.json")
 char2idx_file = os.path.join(target_dir, "char2idx.json")
-
 
 class InfModel(object):
     # Used to zero elements in the probability matrix that correspond to answer
@@ -202,28 +200,21 @@ class Inference(object):
                 ques_char_idxs[0, i, j] = _get_char(char)
         return spans, context_idxs, ques_idxs, context_char_idxs, ques_char_idxs
 
-
 # Demo, example from paper "SQuAD: 100,000+ Questions for Machine Comprehension of Text"
-if __name__ == "__main__":
+flags = tf.flags
+flags.DEFINE_string("context", 'Lebron James is the most powerful basketball player around the world.',
+                    "article content")
+flags.DEFINE_list("question_list", ['who is Lebron James?', 'what is the job of Lebron James'], "question list")
+
+def main(_):
+    config = flags.FLAGS
+    context = config.context
+    questions = config.question_list
+    ans = []
     infer = Inference()
-    context = "In meteorology, precipitation is any product of the condensation " \
-              "of atmospheric water vapor that falls under gravity. The main forms " \
-              "of precipitation include drizzle, rain, sleet, snow, graupel and hail." \
-              "Precipitation forms as smaller droplets coalesce via collision with other " \
-              "rain drops or ice crystals within a cloud. Short, intense periods of rain " \
-              "in scattered locations are called “showers”."
-    ques1 = "What causes precipitation to fall?"
-    ques2 = "What is another main form of precipitation besides drizzle, rain, snow, sleet and hail?"
-    ques3 = "Where do water droplets collide with ice crystals to form precipitation?"
+    for ques in questions:
+        ans.append(infer.response(context,ques))
+    print(ans)
 
-    # Correct: gravity, Output: drizzle, rain, sleet, snow, graupel and hail
-    ans1 = infer.response(context, ques1)
-    print("Answer 1: {}".format(ans1))
-
-    # Correct: graupel, Output: graupel
-    ans2 = infer.response(context, ques2)
-    print("Answer 2: {}".format(ans2))
-
-    # Correct: within a cloud, Output: within a cloud
-    ans3 = infer.response(context, ques3)
-    print("Answer 3: {}".format(ans3))
+if __name__ == '__main__':
+    tf.app.run()

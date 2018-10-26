@@ -1,4 +1,6 @@
 import os
+import logging
+logging.getLogger("tensorflow").setLevel(logging.WARNING)
 import tensorflow as tf
 
 from prepro import prepro
@@ -81,7 +83,7 @@ flags.DEFINE_integer("char_count_limit", -1, "Min count for char")
 
 flags.DEFINE_integer("capacity", 15000, "Batch size of dataset shuffle")
 flags.DEFINE_integer("num_threads", 4, "Number of threads in input pipeline")
-flags.DEFINE_boolean("use_cudnn", True, "Whether to use cudnn (only for GPU)")
+flags.DEFINE_boolean("use_cudnn", False, "Whether to use cudnn (only for GPU)")
 flags.DEFINE_boolean("is_bucket", False, "Whether to use bucketing")
 flags.DEFINE_list("bucket_range", [40, 361, 40], "range of bucket")
 
