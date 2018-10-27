@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# data files
+models/r-net/data/*
+models/r-net/log/*
+
 # C extensions
 *.so
 
@@ -88,6 +92,9 @@ celerybeat-schedule
 
 # SageMath parsed files
 *.sage.py
+
+# crawler stuff
+wiki_crawler
 
 # Environments
 .env
