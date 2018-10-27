@@ -9,6 +9,8 @@ models/r-net/mysql_test.py
 # data files
 models/r-net/data/*
 models/r-net/log/*
+*.pem
+nucleus-key-1.pem
 
 # C extensions
 *.so
