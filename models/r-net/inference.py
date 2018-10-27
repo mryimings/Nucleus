@@ -1,5 +1,4 @@
 import tensorflow as tf
-import spacy
 import os
 import numpy as np
 import ujson as json
@@ -205,11 +204,27 @@ flags = tf.flags
 flags.DEFINE_string("context", 'Lebron James is the most powerful basketball player around the world.',
                     "article content")
 flags.DEFINE_list("question_list", ['who is Lebron James?', 'what is the job of Lebron James'], "question list")
+flags.DEFINE_string("context_path", "./testcases/contexts/context_0.txt", "article context path")
+flags.DEFINE_string("questions_path", "./testcases/questions/questions_0.txt", "questions path")
 
 def main(_):
     config = flags.FLAGS
-    context = config.context
-    questions = config.question_list
+    context_path = config.context_path
+    questions_path = config.questions_path
+    print("sym!!!")
+    print(context_path)
+    print(questions_path)
+
+    with open(context_path, "r") as r:
+        context = r.readline().strip()
+
+    with open(questions_path, "r") as r:
+        questions = []
+        for q in r:
+            questions.append(q.strip())
+    print(context)
+    print(questions)
+
     ans = []
     infer = Inference()
     for ques in questions:
