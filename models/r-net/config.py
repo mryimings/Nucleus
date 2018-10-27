@@ -1,8 +1,8 @@
+####
 import os
 import logging
 logging.getLogger("tensorflow").setLevel(logging.WARNING)
 import tensorflow as tf
-
 from prepro import prepro
 from main import train, test
 
