@@ -40,7 +40,9 @@ python evaluate-v1.1.py ~/data/squad/dev-v1.1.json log/answer/answer.json
 
 To inference based on the update model:
 First you need to download the log folder including model here (https://1drv.ms/f/s!AtfKeiTxgnoqiqxY3XHlY0zO7MAojg) and 
-put it under models/r-net/ 
+put it under models/r-net/log/ 
+Next you need to download the data files from here (https://1drv.ms/f/s!AtfKeiTxgnoqiqxXzj7ljtCcjkRLdw) and put it under
+models/r-net/data/ 
 Then run the following command.
 ```bash
 python inference --h
