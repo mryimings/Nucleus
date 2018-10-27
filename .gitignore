@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# temp files
+models/r-net/mysql_test.py
+
 # data files
 models/r-net/data/*
 models/r-net/log/*
