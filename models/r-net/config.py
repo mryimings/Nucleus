@@ -131,6 +131,6 @@ def main(_):
         print("Unknown mode")
         exit(0)
 
-    print(6)
+    print(7)
 if __name__ == "__main__":
     tf.app.run()
