@@ -1,4 +1,3 @@
-####
 import os
 import logging
 logging.getLogger("tensorflow").setLevel(logging.WARNING)
@@ -130,7 +129,6 @@ def main(_):
     else:
         print("Unknown mode")
         exit(0)
-
 
 if __name__ == "__main__":
     tf.app.run()
