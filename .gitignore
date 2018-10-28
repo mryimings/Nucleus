@@ -5,6 +5,7 @@ __pycache__/
 
 # temp files
 models/r-net/mysql_test.py
+test/_trial_temp/*
 
 # data files
 models/r-net/data/*
