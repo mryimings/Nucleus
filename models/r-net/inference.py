@@ -229,6 +229,7 @@ def main(_):
     for ques in questions:
         ans.append(infer.response(context,ques))
     print(ans)
+    # ""
 
 if __name__ == '__main__':
     tf.app.run()
