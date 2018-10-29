@@ -208,13 +208,13 @@ flags.DEFINE_string("context_path", "./testcases/contexts/", "article context pa
 flags.DEFINE_string("questions_path", "./testcases/questions/", "questions path")
 
 def main(_):
+    print("Beginning of testing of r-net model")
     inference = Inference()
     for idx in os.listdir("testcases/contexts"):
         if not idx.isdigit():
             continue
         with open(os.path.join("testcases", "contexts", idx), "r") as f:
             context = f.readline().strip()
-
         print("=================================")
         print("This is context", idx)
         with open(os.path.join("testcases", "questions", idx), "r") as f:
@@ -226,6 +226,7 @@ def main(_):
                 print("Answer:")
                 answer = inference.response(context, question).strip()
                 print(answer, "\n")
+    print("End of testing of r-net model")
 
 if __name__ == '__main__':
     tf.app.run()
