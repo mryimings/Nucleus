@@ -211,7 +211,6 @@ def main(_):
     config = flags.FLAGS
     context_path = config.context_path
     questions_path = config.questions_path
-    print("sym!!!")
     print(context_path)
     print(questions_path)
 
