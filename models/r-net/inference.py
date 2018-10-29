@@ -214,10 +214,13 @@ def main(_):
             continue
         with open(os.path.join("testcases", "contexts", idx), "r") as f:
             context = f.readline().strip()
+
         print("=================================")
         print("This is context", idx)
         with open(os.path.join("testcases", "questions", idx), "r") as f:
             for question in f:
+                if not question:
+                    continue
                 print("Question:")
                 print(question.strip())
                 print("Answer:")
@@ -226,4 +229,4 @@ def main(_):
 
 if __name__ == '__main__':
     tf.app.run()
-    # 123
+
