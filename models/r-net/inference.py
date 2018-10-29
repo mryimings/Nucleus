@@ -204,32 +204,25 @@ flags = tf.flags
 flags.DEFINE_string("context", 'Lebron James is the most powerful basketball player around the world.',
                     "article content")
 flags.DEFINE_list("question_list", ['who is Lebron James?', 'what is the job of Lebron James'], "question list")
-flags.DEFINE_string("context_path", "./testcases/contexts/context_0.txt", "article context path")
-flags.DEFINE_string("questions_path", "./testcases/questions/questions_0.txt", "questions path")
+flags.DEFINE_string("context_path", "./testcases/contexts/", "article context path")
+flags.DEFINE_string("questions_path", "./testcases/questions/", "questions path")
 
 def main(_):
-    config = flags.FLAGS
-    context_path = config.context_path
-    questions_path = config.questions_path
-    print(context_path)
-    print(questions_path)
-
-    with open(context_path, "r") as r:
-        context = r.readline().strip()
-
-    with open(questions_path, "r") as r:
-        questions = []
-        for q in r:
-            questions.append(q.strip())
-    print(context)
-    print(questions)
-
-    ans = []
-    infer = Inference()
-    for ques in questions:
-        ans.append(infer.response(context,ques))
-    print(ans)
-    # jjjjj
+    inference = Inference()
+    for idx in os.listdir("testcases/contexts"):
+        if not idx.isdigit():
+            continue
+        with open(os.path.join("testcases", "contexts", idx), "r") as f:
+            context = f.readline().strip()
+        print("=================================")
+        print("This is context", idx)
+        with open(os.path.join("testcases", "questions", idx), "r") as f:
+            for question in f:
+                print("Question:")
+                print(question.strip())
+                print("Answer:")
+                answer = inference.response(context, question).strip()
+                print(answer, "\n")
 
 if __name__ == '__main__':
     tf.app.run()
