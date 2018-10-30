@@ -1,6 +1,4 @@
 import unittest
-import sys
-sys.path.insert(0, '../database')
 from database.db_update_class import db
 
 
