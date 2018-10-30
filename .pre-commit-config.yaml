@@ -13,5 +13,4 @@ repos:
     -   id: debug-statements
     -   id: detect-aws-credentials
     -   id: detect-private-key
-    -   id: requirements-txt-fixer
 
