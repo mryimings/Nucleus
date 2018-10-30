@@ -16,8 +16,8 @@ char_hidden = 100
 use_cudnn = False
 
 # File path
-target_dir = "data"
-save_dir = "log/model"
+target_dir = "./models/r-net/data"
+save_dir = "./models/r-net/log/model"
 word_emb_file = os.path.join(target_dir, "word_emb.json")
 char_emb_file = os.path.join(target_dir, "char_emb.json")
 word2idx_file = os.path.join(target_dir, "word2idx.json")
@@ -204,31 +204,45 @@ flags = tf.flags
 flags.DEFINE_string("context", 'Lebron James is the most powerful basketball player around the world.',
                     "article content")
 flags.DEFINE_list("question_list", ['who is Lebron James?', 'what is the job of Lebron James'], "question list")
-flags.DEFINE_string("context_path", "./testcases/contexts/", "article context path")
-flags.DEFINE_string("questions_path", "./testcases/questions/", "questions path")
+flags.DEFINE_string("context_path", "", "article context path")
+flags.DEFINE_string("questions_path", "", "questions path")
+flags.DEFINE_string("inference_mode", "default", "test user designated file or default files")
+
+def infer(inference, context_file, questions_file):
+    with open(context_file, "r") as f:
+        context = f.readline().strip()
+    print("=================================")
+    print("This is context from", context_file)
+    with open(questions_file, "r") as f:
+        for question in f:
+            if not question:
+                continue
+            print("Question:")
+            print(question.strip())
+            print("Answer:")
+            answer = inference.response(context, question).strip()
+            print(answer, "\n")
 
 def main(_):
+    config = flags.FLAGS
     print("Beginning of testing of r-net model")
-    inference = Inference()
-    for idx in os.listdir("testcases/contexts"):
-        if not idx.isdigit():
-            continue
-        with open(os.path.join("testcases", "contexts", idx), "r") as f:
-            context = f.readline().strip()
-        print("=================================")
-        print("This is context", idx)
-        with open(os.path.join("testcases", "questions", idx), "r") as f:
-            for question in f:
-                if not question:
-                    continue
-                print("Question:")
-                print(question.strip())
-                print("Answer:")
-                answer = inference.response(context, question).strip()
-                print(answer, "\n")
+    print("Mode:", config.inference_mode)
+    if config.inference_mode == "default":
+        inference = Inference()
+        for idx in os.listdir("testcases/contexts"):
+            if not idx.isdigit():
+                continue
+            infer(inference, os.path.join("testcases", "contexts", idx), os.path.join("testcases", "questions", idx))
+    elif config.inference_mode == "customized":
+        inference = Inference()
+        assert os.path.isfile(config.context_path)
+        assert os.path.isfile(config.questions_path)
+        infer(inference, config.context_path, config.questions_path)
+    else:
+        raise ValueError("unknown inference mode")
     print("End of testing of r-net model")
 
 if __name__ == '__main__':
     tf.app.run()
-    #
+
 
