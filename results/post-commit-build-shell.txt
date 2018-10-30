@@ -1,0 +1,7 @@
+source venv/bin/activate
+python models/r-net/inference.py
+python ./models/r-net/inference.py --inference_mode customized --context_path ./testcases/contexts/0 --questions_path ./testcases/questions/0
+pylint inference.py
+python test/test_inference.py
+python database/test_database.py
+deactivate
