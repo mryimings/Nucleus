@@ -136,5 +136,8 @@ class database_test_cases(unittest.TestCase):
         new_row_history = count_rows(self.db.mycursor)
         self.assertEqual(new_row_history,ori_row_history)
 
+    def close_db(self):
+        self.db.db.close()
+
 if __name__ == '__main__':
     unittest.main()
