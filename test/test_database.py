@@ -8,7 +8,7 @@ def count_rows(cursor):
     res = cursor.fetchone()
     return res[0]
 
-
+# the test cases for database
 class database_test_cases(unittest.TestCase):
     def setUp(self):
         self.db = db()

@@ -4,12 +4,13 @@ __pycache__/
 *$py.class
 
 # temp files
+models/r_net/mysql_test.py
 models/r-net/mysql_test.py
 test/_trial_temp/*
 
 # data files
-models/r-net/data/*
-models/r-net/log/*
+models/r_net/data/*
+models/r_net/log/*
 *.pem
 nucleus-key-1.pem
 

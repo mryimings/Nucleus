@@ -6,7 +6,7 @@ import ujson as json
 from func import cudnn_gru, native_gru, dot_attention, summ, ptr_net
 from prepro import word_tokenize, convert_idx
 
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 # Must be consistant with training
 char_limit = 16
@@ -16,12 +16,12 @@ char_hidden = 100
 use_cudnn = False
 
 # File path
-target_dir = "./models/r-net/data"
-save_dir = "./models/r-net/log/model"
-word_emb_file = os.path.join(target_dir, "word_emb.json")
-char_emb_file = os.path.join(target_dir, "char_emb.json")
-word2idx_file = os.path.join(target_dir, "word2idx.json")
-char2idx_file = os.path.join(target_dir, "char2idx.json")
+target_dir = './models/r_net/data'
+save_dir = './models/r_net/log/model'
+word_emb_file = os.path.join(target_dir, 'word_emb.json')
+char_emb_file = os.path.join(target_dir, 'char_emb.json')
+word2idx_file = os.path.join(target_dir, 'word2idx.json')
+char2idx_file = os.path.join(target_dir, 'char2idx.json')
 
 class InfModel(object):
     # Used to zero elements in the probability matrix that correspond to answer
@@ -35,10 +35,10 @@ class InfModel(object):
         self.qh = tf.placeholder(tf.int32, [1, None, char_limit])
         self.tokens_in_context = tf.placeholder(tf.int64)
 
-        self.word_mat = tf.get_variable("word_mat", initializer=tf.constant(
+        self.word_mat = tf.get_variable('word_mat', initializer=tf.constant(
             word_mat, dtype=tf.float32), trainable=False)
         self.char_mat = tf.get_variable(
-            "char_mat", initializer=tf.constant(char_mat, dtype=tf.float32))
+            'char_mat', initializer=tf.constant(char_mat, dtype=tf.float32))
 
         self.c_mask = tf.cast(self.c, tf.bool)
         self.q_mask = tf.cast(self.q, tf.bool)
@@ -61,8 +61,8 @@ class InfModel(object):
             char_hidden
         gru = cudnn_gru if use_cudnn else native_gru
 
-        with tf.variable_scope("emb"):
-            with tf.variable_scope("char"):
+        with tf.variable_scope('emb'):
+            with tf.variable_scope('char'):
                 ch_emb = tf.reshape(tf.nn.embedding_lookup(
                     self.char_mat, self.ch), [N * PL, CL, dc])
                 qh_emb = tf.reshape(tf.nn.embedding_lookup(
@@ -78,37 +78,37 @@ class InfModel(object):
                 qh_emb = tf.reshape(qh_emb, [N, QL, 2 * dg])
                 ch_emb = tf.reshape(ch_emb, [N, PL, 2 * dg])
 
-            with tf.name_scope("word"):
+            with tf.name_scope('word'):
                 c_emb = tf.nn.embedding_lookup(self.word_mat, self.c)
                 q_emb = tf.nn.embedding_lookup(self.word_mat, self.q)
 
             c_emb = tf.concat([c_emb, ch_emb], axis=2)
             q_emb = tf.concat([q_emb, qh_emb], axis=2)
 
-        with tf.variable_scope("encoding"):
+        with tf.variable_scope('encoding'):
             rnn = gru(num_layers=3, num_units=d, batch_size=N,
                       input_size=c_emb.get_shape().as_list()[-1])
             c = rnn(c_emb, seq_len=self.c_len)
             q = rnn(q_emb, seq_len=self.q_len)
 
-        with tf.variable_scope("attention"):
+        with tf.variable_scope('attention'):
             qc_att = dot_attention(c, q, mask=self.q_mask, hidden=d)
             rnn = gru(num_layers=1, num_units=d, batch_size=N,
                       input_size=qc_att.get_shape().as_list()[-1])
             att = rnn(qc_att, seq_len=self.c_len)
 
-        with tf.variable_scope("match"):
+        with tf.variable_scope('match'):
             self_att = dot_attention(att, att, mask=self.c_mask, hidden=d)
             rnn = gru(num_layers=1, num_units=d, batch_size=N,
                       input_size=self_att.get_shape().as_list()[-1])
             match = rnn(self_att, seq_len=self.c_len)
 
-        with tf.variable_scope("pointer"):
+        with tf.variable_scope('pointer'):
             init = summ(q[:, :, -2 * d:], d, mask=self.q_mask)
             pointer = ptr_net(batch=N, hidden=init.get_shape().as_list()[-1])
             logits1, logits2 = pointer(init, match, d, self.c_mask)
 
-        with tf.variable_scope("predict"):
+        with tf.variable_scope('predict'):
             outer = tf.matmul(tf.expand_dims(tf.nn.softmax(logits1), axis=2),
                               tf.expand_dims(tf.nn.softmax(logits2), axis=1))
             outer = tf.cond(
@@ -122,13 +122,13 @@ class InfModel(object):
 class Inference(object):
 
     def __init__(self):
-        with open(word_emb_file, "r") as fh:
+        with open(word_emb_file, 'r') as fh:
             self.word_mat = np.array(json.load(fh), dtype=np.float32)
-        with open(char_emb_file, "r") as fh:
+        with open(char_emb_file, 'r') as fh:
             self.char_mat = np.array(json.load(fh), dtype=np.float32)
-        with open(word2idx_file, "r") as fh:
+        with open(word2idx_file, 'r') as fh:
             self.word2idx_dict = json.load(fh)
-        with open(char2idx_file, "r") as fh:
+        with open(char2idx_file, 'r') as fh:
             self.char2idx_dict = json.load(fh)
         self.model = InfModel(self.word_mat, self.char_mat)
         sess_config = tf.ConfigProto(allow_soft_placement=True)
@@ -154,11 +154,11 @@ class Inference(object):
         return context[start_idx: end_idx]
 
     def prepro(self, context, question):
-        context = context.replace("''", '" ').replace("``", '" ')
+        context = context.replace("''", '" ').replace('``', '" ')
         context_tokens = word_tokenize(context)
         context_chars = [list(token) for token in context_tokens]
         spans = convert_idx(context, context_tokens)
-        ques = question.replace("''", '" ').replace("``", '" ')
+        ques = question.replace("''", '" ').replace('``', '" ')
         ques_tokens = word_tokenize(ques)
         ques_chars = [list(token) for token in ques_tokens]
 
@@ -201,49 +201,48 @@ class Inference(object):
 
 # Demo, example from paper "SQuAD: 100,000+ Questions for Machine Comprehension of Text"
 flags = tf.flags
-flags.DEFINE_string("context", 'Lebron James is the most powerful basketball player around the world.',
-                    "article content")
-flags.DEFINE_list("question_list", ['who is Lebron James?', 'what is the job of Lebron James'], "question list")
-flags.DEFINE_string("context_path", "", "article context path")
-flags.DEFINE_string("questions_path", "", "questions path")
-flags.DEFINE_string("inference_mode", "default", "test user designated file or default files")
+flags.DEFINE_string('context', 'Lebron James is the most powerful basketball player around the world.',
+                    'article content')
+flags.DEFINE_list('question_list', ['who is Lebron James?', 'what is the job of Lebron James'], 'question list')
+flags.DEFINE_string('context_path', '', 'article context path')
+flags.DEFINE_string('questions_path', '', 'questions path')
+flags.DEFINE_string('inference_mode', 'default', 'test user designated file or default files')
 
 def infer(inference, context_file, questions_file):
     assert os.path.isfile(context_file)
     assert os.path.isfile(questions_file)
-    with open(context_file, "r") as f:
+    with open(context_file, 'r') as f:
         context = f.readline().strip()
-    print("=================================")
-    print("This is context from", context_file)
-    with open(questions_file, "r") as f:
+    print('=================================')
+    print('This is context from', context_file)
+    with open(questions_file, 'r') as f:
         for question in f:
             if not question:
                 continue
-            print("Question:")
+            print('Question:')
             print(question.strip())
-            print("Answer:")
+            print('Answer:')
             answer = inference.response(context, question).strip()
-            print(answer, "\n")
+            print(answer, '\n')
 
 def main(_):
     config = flags.FLAGS
-    print("Beginning of testing of r-net model")
-    print("Mode:", config.inference_mode)
-    if config.inference_mode == "default":
+    print('Beginning of testing of r_net model')
+    print('Mode:', config.inference_mode)
+    if config.inference_mode == 'default':
         inference = Inference()
-        for idx in os.listdir("testcases/contexts"):
+        for idx in os.listdir('testcases/contexts'):
             if not idx.isdigit():
                 continue
-            infer(inference, os.path.join("testcases", "contexts", idx), os.path.join("testcases", "questions", idx))
-    elif config.inference_mode == "customized":
+            infer(inference, os.path.join('testcases', 'contexts', idx), os.path.join('testcases', 'questions', idx))
+    elif config.inference_mode == 'customized':
         inference = Inference()
         infer(inference, config.context_path, config.questions_path)
     else:
-        raise ValueError("unknown inference mode")
-    print("End of testing of r-net model")
+        raise ValueError('unknown inference mode')
+    print('End of testing of r_net model')
 
 if __name__ == '__main__':
     tf.app.run()
-    #
 
 
