@@ -13,7 +13,6 @@ repos:
     -   id: check-json
     -   id: check-merge-conflict
     -   id: check-symlinks
-    -   id: check-vcs-permalinks
     -   id: debug-statements
     -   id: detect-aws-credentials
     -   id: detect-private-key
