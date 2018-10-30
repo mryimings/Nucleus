@@ -23,5 +23,9 @@ You can also customize the questions and passage, of course. We provide a test c
 python models/r_net/inference.py --inference_mode customized --context_path context.txt --questions_path questions.txt
 ```
 
+## Results
+
+All the results, and files required by the professor, including pre-commit and post-commit config, unit test reports, bug-finder reports, are in the `result` folder. **These files should be read only**
+
 
 
