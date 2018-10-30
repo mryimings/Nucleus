@@ -209,6 +209,8 @@ flags.DEFINE_string("questions_path", "", "questions path")
 flags.DEFINE_string("inference_mode", "default", "test user designated file or default files")
 
 def infer(inference, context_file, questions_file):
+    assert os.path.isfile(context_file)
+    assert os.path.isfile(questions_file)
     with open(context_file, "r") as f:
         context = f.readline().strip()
     print("=================================")
@@ -235,8 +237,6 @@ def main(_):
             infer(inference, os.path.join("testcases", "contexts", idx), os.path.join("testcases", "questions", idx))
     elif config.inference_mode == "customized":
         inference = Inference()
-        assert os.path.isfile(config.context_path)
-        assert os.path.isfile(config.questions_path)
         infer(inference, config.context_path, config.questions_path)
     else:
         raise ValueError("unknown inference mode")
