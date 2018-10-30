@@ -29,7 +29,7 @@ class database_test_cases(unittest.TestCase):
         # assert the success of insertion
         self.db.mycursor.execute(self.sql_count_article)
         new_row = count_rows(self.db.mycursor)
-        self.assertEqual(new_row,ori_row+1)
+        self.assertEqual(0,ori_row+1)
 
         # delete the test record
         self.db.mycursor.execute(self.sql_delete_article, (article_id,))
