@@ -1,6 +1,6 @@
 import unittest
 from db_update_class import db
-
+###
 def count_rows(cursor):
     res = cursor.fetchone()
     return res[0]
@@ -47,7 +47,7 @@ class database_test_cases(unittest.TestCase):
         ori_row = count_rows(self.db.mycursor)
 
         # add a new test record into questions table
-        question_id = self.db.add_question('1', 'what do we love?')
+        question_id = self.db.add_question('1','what do we love?')
 
         # assert the success of insertion
         self.db.mycursor.execute(self.sql_count_question)
