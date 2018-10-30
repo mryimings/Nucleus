@@ -1,7 +1,7 @@
 import unittest
 import sys
 sys.path.insert(0, '../database')
-from db_update_class import db
+from database.db_update_class import db
 
 
 def count_rows(cursor):
