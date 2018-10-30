@@ -1,0 +1,190 @@
+Started by GitHub push by ysun647
+Building in workspace /Users/Shared/Jenkins/Home/workspace/Nucleus
+ > git rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/ysun647/Nucleus.git # timeout=10
+Fetching upstream changes from https://github.com/ysun647/Nucleus.git
+ > git --version # timeout=10
+ > git fetch --tags --progress https://github.com/ysun647/Nucleus.git +refs/heads/*:refs/remotes/origin/*
+Seen branch in repository origin/master
+Seen branch in repository origin/model_inference
+Seen branch in repository origin/model_interface
+Seen branch in repository origin/pre-commit
+Seen branch in repository origin/yiming
+Seen 5 remote branches
+ > git show-ref --tags -d # timeout=10
+Checking out Revision bb1f9e133938e89538e266f1d4f6a6327c93ca60 (origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f bb1f9e133938e89538e266f1d4f6a6327c93ca60
+Commit message: "meaningless commit"
+ > git rev-list --no-walk c5b10d01d1cd4d11b335584d43e9c1226e2233b8 # timeout=10
+[Nucleus] $ /bin/sh -xe /Users/Shared/Jenkins/tmp/jenkins8296139312037294993.sh
++ source venv/bin/activate
+++ deactivate nondestructive
+++ unset -f pydoc
+++ '[' -z '' ']'
+++ '[' -z '' ']'
+++ '[' -n /bin/sh ']'
+++ hash -r
+++ '[' -z '' ']'
+++ unset VIRTUAL_ENV
+++ '[' '!' nondestructive = nondestructive ']'
+++ VIRTUAL_ENV=/Users/Shared/Jenkins/Home/workspace/Nucleus/venv
+++ export VIRTUAL_ENV
+++ _OLD_VIRTUAL_PATH=/usr/bin:/bin:/usr/sbin:/sbin
+++ PATH=/Users/Shared/Jenkins/Home/workspace/Nucleus/venv/bin:/usr/bin:/bin:/usr/sbin:/sbin
+++ export PATH
+++ '[' -z '' ']'
+++ '[' -z '' ']'
+++ _OLD_VIRTUAL_PS1=
+++ '[' x '!=' x ']'
++++ basename /Users/Shared/Jenkins/Home/workspace/Nucleus/venv
+++ PS1='(venv) '
+++ export PS1
+++ alias pydoc
+++ '[' -n /bin/sh ']'
+++ hash -r
++ python test/test_inference.py
+WARNING:tensorflow:From /Users/Shared/Jenkins/Home/workspace/Nucleus/models/r_net/func.py:89: calling reverse_sequence (from tensorflow.python.ops.array_ops) with seq_dim is deprecated and will be removed in a future version.
+Instructions for updating:
+seq_dim is deprecated, use seq_axis instead
+WARNING:tensorflow:From /Users/Shared/Jenkins/Home/workspace/Nucleus/venv/lib/python3.6/site-packages/tensorflow/python/util/deprecation.py:488: calling reverse_sequence (from tensorflow.python.ops.array_ops) with batch_dim is deprecated and will be removed in a future version.
+Instructions for updating:
+batch_dim is deprecated, use batch_axis instead
+/anaconda3/lib/python3.6/subprocess.py:766: ResourceWarning: subprocess 45309 is still running
+  ResourceWarning, source=self)
+test/test_inference.py:14: ResourceWarning: unclosed file <_io.TextIOWrapper name=3 encoding='US-ASCII'>
+  res = os.popen(self.com_default).read()
+.
+----------------------------------------------------------------------
+Ran 1 test in 17.263s
+
+OK
+Beginning of testing of r_net model
+Mode: default
+=================================
+This is context from /Users/Shared/Jenkins/Home/workspace/Nucleus/testcases/contexts/0
+Question:
+Who is Lebron James?
+Answer:
+Lebron James
+
+Question:
+What is the job of Lebron James?
+Answer:
+Lebron James
+
+=================================
+This is context from /Users/Shared/Jenkins/Home/workspace/Nucleus/testcases/contexts/1
+Question:
+How many states is the United States composed of?
+Answer:
+50
+
+Question:
+What is the largest city by population of United States?
+Answer:
+New York City
+
+Question:
+Where is the State of Hawaii?
+Answer:
+New York City
+
+=================================
+This is context from /Users/Shared/Jenkins/Home/workspace/Nucleus/testcases/contexts/4
+Question:
+sudo rm -rf /
+Answer:
+feasible
+
+Question:
+drop database;
+Answer:
+feasible
+
+=================================
+This is context from /Users/Shared/Jenkins/Home/workspace/Nucleus/testcases/contexts/3
+Question:
+%&^*(&^(*))
+Answer:
+87y378hfs r2398rhbf %R*8vb8*FGcc 89H(*h
+
+Question:
+(*()&)*&* [];.][;.] ;[}.].]
+Answer:
+vwsdofb
+
+Question:
+dgff728r9gfqqef
+Answer:
+87y378hfs r2398rhbf %R*8vb8*FGcc 89H(*h
+
+=================================
+This is context from /Users/Shared/Jenkins/Home/workspace/Nucleus/testcases/contexts/2
+Question:
+387yeihfiwh
+Answer:
+49osdhfcoishfb 3298rue 980ujefowhv
+
+Question:
+df2h3ugfh9iughvg 43trfw9hbv9ebhe
+Answer:
+49osdhfcoishfb 3298rue 980ujefowhv
+
+Question:
+f894hhgkdrngou5 g8304jr0wh
+Answer:
+49osdhfcoishfb 3298rue 980ujefowhv
+
+Question:
+gnvefhow 342fwfwenb t2n4rfwegnowg
+Answer:
+e8wfhohfnkasdbnkcjb 3qwrhdaksbfnmsdbv qer3qer13erfegwsdfxoibhor8yt98yw59htaiuvshto 889wehfskdn 3rkjbfdksjb8hn 3rhqw9efhsdjkfbn 3eqwnknh89fhn 8hjoihsdfknskf 23rsfsdvdsbvd h98797g9q7gf9dsgivbsdbvshebfew
+
+=================================
+This is context from /Users/Shared/Jenkins/Home/workspace/Nucleus/testcases/contexts/5
+Question:
+By what is 7gf2riuqshgif created?
+Answer:
+892hfd
+
+Question:
+What are 7gf2riuqshgif composed of?
+Answer:
+378ehad, iojwfwe34
+
+Question:
+When was 7gf2riuqshgif sold?
+Answer:
+2005
+
+Question:
+Who was 7gf2riuqshgif sold to?
+Answer:
+892hfd
+
+Question:
+How much money is 7gf2riuqshgif sold by?
+Answer:
+one million
+
+End of testing of r_net model
+
++ deactivate
++ unset -f pydoc
++ '[' -z _ ']'
++ PATH=/usr/bin:/bin:/usr/sbin:/sbin
++ export PATH
++ unset _OLD_VIRTUAL_PATH
++ '[' -z '' ']'
++ '[' -n /bin/sh ']'
++ hash -r
++ '[' -z _ ']'
++ PS1=
++ export PS1
++ unset _OLD_VIRTUAL_PS1
++ unset VIRTUAL_ENV
++ '[' '!' '' = nondestructive ']'
++ unset -f deactivate
+Finished: SUCCESS
