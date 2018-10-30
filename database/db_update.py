@@ -6,7 +6,7 @@ db = mysql.connector.connect(host='127.0.0.1', user='root',
 print(db)
 
 mycursor = db.cursor()
-# mycursor.execute("CREATE DATABASE mydatabase")
+# mycursor.execute("CREATE DATABASE mydatabase") 123456789
 # mycursor.execute("SHOW DATABASES")
 # mycursor.execute("CREATE TABLE customers (name VARCHAR(255), address VARCHAR(255))")
 
