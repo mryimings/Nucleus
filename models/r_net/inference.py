@@ -5,6 +5,9 @@ import ujson as json
 
 from func import cudnn_gru, native_gru, dot_attention, summ, ptr_net
 from prepro import word_tokenize, convert_idx
+from os.path import dirname, abspath
+parent_dir = dirname(abspath(__file__))
+home_dir = dirname(dirname(dirname(abspath(__file__))))
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -16,8 +19,8 @@ char_hidden = 100
 use_cudnn = False
 
 # File path
-target_dir = './models/r_net/data'
-save_dir = './models/r_net/log/model'
+target_dir = '{}/data'.format(parent_dir)
+save_dir = '{}/log/model'.format(parent_dir)
 word_emb_file = os.path.join(target_dir, 'word_emb.json')
 char_emb_file = os.path.join(target_dir, 'char_emb.json')
 word2idx_file = os.path.join(target_dir, 'word2idx.json')
@@ -231,10 +234,10 @@ def main(_):
     print('Mode:', config.inference_mode)
     if config.inference_mode == 'default':
         inference = Inference()
-        for idx in os.listdir('testcases/contexts'):
+        for idx in os.listdir('{}/testcases/contexts'.format(home_dir)):
             if not idx.isdigit():
                 continue
-            infer(inference, os.path.join('testcases', 'contexts', idx), os.path.join('testcases', 'questions', idx))
+            infer(inference, os.path.join('{}/testcases'.format(home_dir), 'contexts', idx), os.path.join('{}/testcases'.format(home_dir), 'questions', idx))
     elif config.inference_mode == 'customized':
         inference = Inference()
         infer(inference, config.context_path, config.questions_path)
