@@ -39,10 +39,10 @@ python evaluate-v1.1.py ~/data/squad/dev-v1.1.json log/answer/answer.json
 ```
 
 To inference based on the update model:
-First you need to download the log folder including model here (https://1drv.ms/f/s!AtfKeiTxgnoqiqxY3XHlY0zO7MAojg) and 
-put it under models/r-net/log/ 
+First you need to download the log folder including model here (https://1drv.ms/f/s!AtfKeiTxgnoqiqxY3XHlY0zO7MAojg) and
+put it under models/r-net/log/
 Next you need to download the data files from here (https://1drv.ms/f/s!AtfKeiTxgnoqiqxXzj7ljtCcjkRLdw) and put it under
-models/r-net/data/ 
+models/r-net/data/
 Then run the following command.
 ```bash
 python inference --h
@@ -84,7 +84,7 @@ See release for trained model.
 
 ## Extensions
 
-These settings may increase the score but not used in the model by default. You can turn these settings on in `config.py`. 
+These settings may increase the score but not used in the model by default. You can turn these settings on in `config.py`.
 
  * [Pretrained GloVe character embedding](https://github.com/minimaxir/char-embeddings). Contributed by yanghanxy.
  * [Fasttext Embedding](https://fasttext.cc/docs/en/english-vectors.html). Contributed by xiongyifan. May increase the F1 by 1% (reported by xiongyifan).

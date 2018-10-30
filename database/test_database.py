@@ -1,6 +1,4 @@
 import unittest
-import sys
-sys.path.insert(0, '../database')
 from db_update_class import db
 
 def count_rows(cursor):
@@ -137,6 +135,9 @@ class database_test_cases(unittest.TestCase):
         self.db.mycursor.execute(self.sql_count_history)
         new_row_history = count_rows(self.db.mycursor)
         self.assertEqual(new_row_history,ori_row_history)
+
+    def close_db(self):
+        self.db.db.close()
 
 if __name__ == '__main__':
     unittest.main()
