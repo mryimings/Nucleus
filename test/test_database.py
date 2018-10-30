@@ -1,6 +1,5 @@
 import unittest
 from database.db_update_class import db
-###
 
 def count_rows(cursor):
     res = cursor.fetchone()
