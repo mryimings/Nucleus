@@ -17,24 +17,10 @@ Run the following command at root directory, and you will see the result of Nucl
 python models/r_net/inference.py
 ```
 
-You can also customize the questions and passage, of course. You may provide a text file like this:
+You can also customize the questions and passage, of course. We provide a test context file `context.txt` and a test questions file `questions.txt`. Simply run the following command on the sample files we provided, or your own customized files if you would like to.
 
 ```angular2html
-Columbia University is established in 1754. Columbia University belongs to the Ivy League and is in the New York City. Lots of famous scientists and politicians graduated from Culumbia University.
-```
-
-and several questions like this:
-
-```angular2html
-Where is Columbia University?
-Where does scientists and politicians come from?
-When is Columbia University established?
-```
-
-put the context to `<root>/context.txt` and the question to `<root>/questions.txt`, then run the following command:
-
-```angular2html
-python models/r_net/inference.py --inference_mode customized --context_path <root>/context.txt --questions_path <root>/questions.txt
+python models/r_net/inference.py --inference_mode customized --context_path context.txt --questions_path questions.txt
 ```
 
 
