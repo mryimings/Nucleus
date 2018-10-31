@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from warrant import Cognito
 
 app = Flask(__name__)
@@ -9,6 +9,7 @@ def index():
 
 @app.route('/login')
 def login():
+    print(request.form)
     return render_template('login.html')
 
 @app.route('/code_registration')
