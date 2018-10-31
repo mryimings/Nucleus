@@ -1,25 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Log In</title>
+{% extends "base.html" %}
 
-    <form class="modal-content animate" action="/action_page.php">
+{% block title %}Login{% endblock %}
 
-    <div class="container">
-      <label><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
-
-      <label><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="psw" required>
-
-      <button type="submit">Login</button>
-      <label>
-        <input type="checkbox" checked="checked" name="remember"> Remember me
-      </label>
-    </div>
-  </form>
-</head>
-<body>
-</body>
-</html>
+{% block content %}
+<form action="{{ url_for('login') }}" method="POST">
+    {% if error %}
+    <p style="color:#8d69ff">
+        {{ error }}
+    </p>
+    {% endif %}
+    <p>
+        Username: <input type="text" name="username">
+    </p>
+    <p>
+        Password: <input type="password" name="password">
+    </p>
+    <button type="Submit">Login</button>
+</form>
+{% endblock %}
