@@ -3,3 +3,5 @@ spacy
 tensorflow
 tqdm
 ujson
+flask
+warrant
