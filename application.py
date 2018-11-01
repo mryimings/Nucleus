@@ -3,8 +3,9 @@ import logging
 from logging.handlers import RotatingFileHandler
 from warrant import Cognito
 from config import cognito_userpool_id, cognito_app_client_id
-import traceback
+from models.r_net.inference import Inference
 
+inference = Inference()
 
 app = Flask(__name__)
 
@@ -54,9 +55,11 @@ def verification():
 
     return render_template("verification.html")
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def welcome():
     if 'username' in session:
+        if request.method == 'POST':
+            flash(inference.response(context='The New York City is in the United States', question='Where is New York City?'))
         return render_template('welcome.html', username=session['username'])
     else:
         return redirect(url_for('login'))
