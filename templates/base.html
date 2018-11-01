@@ -3,13 +3,13 @@
 
 <head>
     {% block head %}
-    <title>{% block title %}{% endblock %} - The Acme Co.</title>
+    <title>{% block title %}{% endblock %} - Nucleus</title>
     {% endblock %}
 </head>
 
 <body>
     <div id="logo">
-        <img src="{{ url_for('static', filename='acme_logo.jpg') }}" alt="Acme Corp." height="150px">
+        <img src="{{ url_for('static', filename='facebook.png') }}" alt="Hooli" height="150px">
     </div>
 
     {% with messages = get_flashed_messages() %}
@@ -27,7 +27,7 @@
     </div>
 <footer>
     {% block footer %}
-    &copy; Copyright 2014 by <a href="http://acmeco.com">The Acme Co.</a>
+    &copy; Copyright 2018 by Hooli</a>
     {% endblock %}
 </footer>
 </body>
