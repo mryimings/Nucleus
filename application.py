@@ -2,6 +2,9 @@ from flask import Flask, render_template, redirect, url_for, flash, session, req
 import logging
 from logging.handlers import RotatingFileHandler
 from warrant import Cognito
+from config import cognito_userpool_id, cognito_app_client_id
+import traceback
+
 
 app = Flask(__name__)
 
@@ -15,7 +18,7 @@ def login():
             return redirect(url_for('welcome'))
         else:
             error = 'Incorrect username and password'
-            app.logger.warning('Incorrect Username and password fot user (%s)', request.form.get('username'))
+            app.logger.warning('Incorrect Username and password for user (%s)', request.form.get('username'))
     return render_template('login.html', error=error)
 
 @app.route('/logout')
@@ -32,10 +35,13 @@ def welcome():
         return redirect(url_for('login'))
 
 def valid_login(username, password):
-    if username == password:
-        return True
-    else:
+    cognito = Cognito(cognito_userpool_id, cognito_app_client_id, username=username)
+    try:
+        cognito.authenticate(password)
+    except:
+        traceback.print_exc()
         return False
+    return True
 
 if __name__ == '__main__':
     app.debug = True
