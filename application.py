@@ -59,7 +59,7 @@ def verification():
 def welcome():
     if 'username' in session:
         if request.method == 'POST':
-            flash(inference.response(context='The New York City is in the United States', question='Where is New York City?'))
+            flash(inference.response(context=request.form['passage'], question=request.form['question']))
         return render_template('welcome.html', username=session['username'])
     else:
         return redirect(url_for('login'))
