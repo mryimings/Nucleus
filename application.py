@@ -26,6 +26,33 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
 
+@app.route('/signup', methods=['GET', "POST"])
+def signup():
+    error = None
+    if request.method == 'POST':
+        cognito = Cognito(user_pool_id=cognito_userpool_id, client_id=cognito_app_client_id)
+        cognito.add_base_attributes(email=request.form['email'])
+        cognito.register(username=request.form['username'], password=request.form['password'])
+        flash("Please check your inbox for verification code")
+        session['username'] = request.form['username']
+        return redirect(url_for('verification'))
+    return render_template('signup.html', error=error)
+
+@app.route('/verification', methods=['GET', 'POST'])
+def verification():
+    assert 'username' in session
+    username = session['username']
+    if request.method == 'POST':
+        cognito = Cognito(user_pool_id=cognito_userpool_id, client_id=cognito_app_client_id, username=username)
+        try:
+            cognito.confirm_sign_up(confirmation_code=request.form['vcode'])
+            return redirect(url_for('welcome'))
+        except Exception as e:
+            print(e)
+            error = 'Unable to verify, please try again'
+            return render_template('signup.html', error=error)
+
+    return render_template("verification.html")
 
 @app.route('/')
 def welcome():
