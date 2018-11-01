@@ -38,8 +38,8 @@ def valid_login(username, password):
     cognito = Cognito(cognito_userpool_id, cognito_app_client_id, username=username)
     try:
         cognito.authenticate(password)
-    except:
-        traceback.print_exc()
+    except Exception as e:
+        print(e)
         return False
     return True
 
