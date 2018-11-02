@@ -12,6 +12,5 @@ repos:
     -   id: check-symlinks
     -   id: debug-statements
     -   id: detect-private-key
-    -   id: double-quote-string-fixer
     -   id: requirements-txt-fixer
-    -   id: no-commit-to-branch
+
