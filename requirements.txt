@@ -5,3 +5,4 @@ tqdm
 ujson
 flask
 warrant
+wikipedia
