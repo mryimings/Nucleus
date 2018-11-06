@@ -1,6 +1,6 @@
 import unittest
 from db_update_class import db
-### ###
+
 def count_rows(cursor):
     res = cursor.fetchone()
     return res[0]
@@ -9,13 +9,13 @@ def count_rows(cursor):
 class database_test_cases(unittest.TestCase):
     def setUp(self):
         self.db = db()
-        self.sql_count_article = 'SELECT count(article_id) FROM Holli.articles'
-        self.sql_count_question = 'SELECT count(question_id) FROM Holli.questions'
-        self.sql_count_history = 'SELECT count(history_id) FROM Holli.user_history'
+        self.sql_count_article = 'SELECT count(article_id) FROM HooliASE.articles'
+        self.sql_count_question = 'SELECT count(question_id) FROM HooliASE.questions'
+        self.sql_count_history = 'SELECT count(history_id) FROM HooliASE.history'
 
-        self.sql_delete_article = 'DELETE from Holli.articles WHERE article_id=%s'
-        self.sql_delete_question = 'DELETE from Holli.questions WHERE question_id=%s'
-        self.sql_delete_history = 'DELETE from Holli.user_history WHERE history_id=%s'
+        self.sql_delete_article = 'DELETE from HooliASE.articles WHERE article_id=%s'
+        self.sql_delete_question = 'DELETE from HooliASE.questions WHERE question_id=%s'
+        self.sql_delete_history = 'DELETE from HooliASE.history WHERE history_id=%s'
 
     # add_article(title, content)
     def test_add_article(self):
@@ -47,7 +47,7 @@ class database_test_cases(unittest.TestCase):
         ori_row = count_rows(self.db.mycursor)
 
         # add a new test record into questions table
-        question_id = self.db.add_question('1','what do we love?')
+        question_id = self.db.add_question('1', 'what do we love?')
 
         # assert the success of insertion
         self.db.mycursor.execute(self.sql_count_question)
