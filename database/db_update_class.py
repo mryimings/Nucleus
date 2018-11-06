@@ -1,9 +1,9 @@
 import mysql.connector
-## ## ##
+from config import database_endpoint, database_pwd, database_user_name
 class db():
     def __init__(self):
-        self.db = mysql.connector.connect(host='127.0.0.1', user='root',
-                                     password='Li7953810', database='Holli')
+        self.db = mysql.connector.connect(host=database_endpoint, user=database_user_name,
+                                     password=database_pwd, database='HooliASE')
         self.mycursor = self.db.cursor(buffered=True)
 
     def add_article(self,title, content):
@@ -23,7 +23,7 @@ class db():
 
 
     def add_history(self,u_id, q_id):
-        sql = 'INSERT INTO user_history (user_id, question_id) VALUES (%s, %s)'
+        sql = 'INSERT INTO history (user_id, question_id) VALUES (%s, %s)'
         val = (u_id, q_id)
         self.mycursor.execute(sql, val)
         self.db.commit()
