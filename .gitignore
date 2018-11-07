@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 # temp files
+config.py
 models/r_net/mysql_test.py
 models/r-net/mysql_test.py
 test/_trial_temp/*
