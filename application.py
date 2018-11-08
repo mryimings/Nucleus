@@ -4,6 +4,8 @@ from logging.handlers import RotatingFileHandler
 from warrant import Cognito
 from config import cognito_userpool_id, cognito_app_client_id
 from models.r_net.inference import Inference
+import wikipedia
+from rake_nltk import Rake
 
 inference = Inference()
 
@@ -83,7 +85,17 @@ def with_context():
 
 @app.route('/without_context', methods=['GET', 'POST'])
 def without_context():
-    return "without context!"
+    if 'username' in session:
+        if request.method == 'POST':
+            rake = Rake()
+            rake.extract_keywords_from_text(request.form['question'])
+            keywords = rake.get_ranked_phrases()
+            keyword = keywords[0]
+            passage = wikipedia.page(keyword).content
+            flash(inference.response(passage, question=request.form['question']))
+        return render_template('without_context.html', username=session['username'])
+    else:
+        return redirect(url_for('login'))
 
 def valid_login(username, password):
     cognito = Cognito(cognito_userpool_id, cognito_app_client_id, username=username)
@@ -97,8 +109,4 @@ def valid_login(username, password):
 if __name__ == '__main__':
     app.debug = True
     app.secret_key = '\xe3-\xe1\xf7\xfb\x91\xb1\x8c\xae\xf2\xc1BH\xe0/K~~%>ac\t\x01'
-    #logging
-    handler = RotatingFileHandler('error.log', maxBytes=10000, backupCount=1)
-    handler.setLevel(logging.INFO)
-    app.logger.addHandler(handler)
     app.run()
