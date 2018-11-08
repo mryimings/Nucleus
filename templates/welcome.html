@@ -10,20 +10,7 @@
 {% block content %}
 
 <p> Welcome, {{ username }} - <a href="{{ url_for('logout') }}">logout</a></p>
-
-<form action="{{ url_for('welcome') }}" method="POST">
-    {% if error %}
-    <p style="color:#8d69ff">
-        {{ error }}
-    </p>
-    {% endif %}
-    <p>
-        Passage: <input type="text" name="passage">
-    </p>
-    <p>
-        Questions: <input type="text" name="question">
-    </p>
-    <button type="Submit">Submit</button>
-</form>
+<p><a href="{{ url_for('with_context') }}">I would like to ask a question with a related context</a></p>
+<p><a href="{{ url_for('without_context') }}">I would like to ask a question directly</a></p>
 
 {% endblock %}
