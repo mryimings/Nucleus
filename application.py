@@ -91,7 +91,7 @@ def without_context():
             rake.extract_keywords_from_text(request.form['question'])
             keywords = rake.get_ranked_phrases()
             keyword = keywords[0]
-            passage = wikipedia.page(keyword).content
+            passage = wikipedia.page(keyword).summary
             flash(inference.response(passage, question=request.form['question']))
         return render_template('without_context.html', username=session['username'])
     else:
@@ -110,3 +110,4 @@ if __name__ == '__main__':
     app.debug = True
     app.secret_key = '\xe3-\xe1\xf7\xfb\x91\xb1\x8c\xae\xf2\xc1BH\xe0/K~~%>ac\t\x01'
     app.run()
+
