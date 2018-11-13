@@ -5,3 +5,6 @@ tqdm
 ujson
 flask
 warrant
+wikipedia
+nltk
+rake-nltk
