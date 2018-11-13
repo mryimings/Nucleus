@@ -33,20 +33,20 @@ def logout():
 def signup():
     error = None
     if request.method == 'POST':
-        if len(request.form['password']) >= 8:
+        if len(request.form['password']) < 8:
+            error = 'password too short!'
+        else:
             cognito = Cognito(user_pool_id=cognito_userpool_id, client_id=cognito_app_client_id)
             cognito.add_base_attributes(email=request.form['email'])
             try:
                 cognito.register(username=request.form['username'], password=request.form['password'])
             except Exception as e:
                 print(e)
-                error = 'user already exists!'
+                error = str(e)
                 return render_template('signup.html', error=error)
             flash("Please check your inbox for verification code")
             session['username'] = request.form['username']
             return redirect(url_for('verification'))
-        else:
-            error = 'password too short!'
     return render_template('signup.html', error=error)
 
 @app.route('/verification', methods=['GET', 'POST'])
