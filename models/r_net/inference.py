@@ -3,8 +3,8 @@ import os
 import numpy as np
 import ujson as json
 
-from func import cudnn_gru, native_gru, dot_attention, summ, ptr_net
-from prepro import word_tokenize, convert_idx
+from models.r_net.func import cudnn_gru, native_gru, dot_attention, summ, ptr_net
+from models.r_net.prepro import word_tokenize, convert_idx
 from os.path import dirname, abspath
 parent_dir = dirname(abspath(__file__))
 home_dir = dirname(dirname(dirname(abspath(__file__))))
