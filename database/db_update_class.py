@@ -40,6 +40,8 @@ class db():
 
     def update(self,user_id, title, content, question):
         flag_art,flag_q = True, True
+
+        # locate article id
         self.mycursor.execute("SELECT article_id FROM articles WHERE article_title='{}'".format(title))
         art_id = self.mycursor.fetchall()
         if not art_id:
@@ -47,6 +49,8 @@ class db():
             art_id = self.add_article(title, content)
         else:
             art_id = art_id[0][0]
+
+        # locate question id
         self.mycursor.execute("SELECT question_id FROM questions WHERE question_content='{}' and article_id={}".format(question,art_id))
         q_id = self.mycursor.fetchall()
         if not q_id:
@@ -54,7 +58,10 @@ class db():
             q_id = self.add_question(art_id, question)
         else:
             q_id = q_id[0][0]
+
+        # locate history id
         h_id = self.add_history(user_id, q_id)
+
         return flag_art,art_id,flag_q,q_id,h_id
 
 
@@ -72,6 +79,8 @@ class db():
     def get_history_list(self, name, limit):
         user_id = self.get_id_by_name(name)
         history = []
+
+        # in history table get question id
         self.mycursor.execute('SELECT question_id FROM history WHERE user_id={} ORDER BY history_id DESC LIMIT {}'.format(user_id, limit))
         q_ids = self.mycursor.fetchall()
         if len(q_ids)==0:
@@ -79,8 +88,12 @@ class db():
              return -1
         for q_id in q_ids:
             q_id = q_id[0]
+
+            # in question table get question content and corresponding article id
             self.mycursor.execute("SELECT question_content, article_id FROM questions WHERE question_id={}".format(q_id))
             q_content, a_id = self.mycursor.fetchall()[0]
+
+            # in article table get article content and article title
             self.mycursor.execute("SELECT article_content, article_title FROM articles WHERE article_id={}".format(a_id))
             a_content, a_title = self.mycursor.fetchall()[0]
             history.append((a_title,a_content,q_content))
