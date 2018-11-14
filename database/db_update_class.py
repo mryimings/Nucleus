@@ -1,4 +1,8 @@
 import mysql.connector
+import sys
+from os.path import dirname, abspath, join
+d = dirname(dirname(abspath(__file__)))
+sys.path.append(join(d,'Nucleus/config.py'))
 from config import database_endpoint, database_pwd, database_user_name
 class db():
     def __init__(self):
