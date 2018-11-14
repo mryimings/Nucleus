@@ -6,6 +6,14 @@ class db():
                                      password=database_pwd, database='HooliASE')
         self.mycursor = self.db.cursor(buffered=True)
 
+    def add_user(self, user_name, user_pwd, user_email):
+        sql = 'INSERT INTO users (name, password, email) VALUES (%s, %s, %s)'
+        val = (user_name, user_pwd, user_email)
+        self.mycursor.execute(sql, val)
+        self.db.commit()
+        return self.mycursor.lastrowid
+
+
     def add_article(self,title, content):
         sql = 'INSERT INTO articles (article_title, article_content) VALUES (%s, %s)'
         val = (title, content)
