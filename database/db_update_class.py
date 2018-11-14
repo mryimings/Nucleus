@@ -1,8 +1,4 @@
 import mysql.connector
-# import sys
-# from os.path import dirname, abspath, join
-# d = dirname(dirname(abspath(__file__)))
-# sys.path.append(join(d,'Nucleus'))
 from config import database_endpoint, database_pwd, database_user_name
 class db():
     def __init__(self):
@@ -16,7 +12,6 @@ class db():
         self.mycursor.execute(sql, val)
         self.db.commit()
         return self.mycursor.lastrowid
-
 
     def add_article(self,title, content):
         sql = 'INSERT INTO articles (article_title, article_content) VALUES (%s, %s)'
