@@ -166,7 +166,7 @@ def main():
     os.system('echo "test inference"')
     os.system("python test/test_inference.py")
     os.system('echo "test database"')
-    os.system("python database/test_database.py")
+    os.system("python test/test_database.py")
     try:
         _validate_config()
         return retv | subprocess.call(_exe() + _opts(stdin))
