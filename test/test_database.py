@@ -1,7 +1,9 @@
 import unittest
 import sys
-sys.path.insert(0, '../database')
-from db_update_class import db
+from os.path import dirname, abspath
+d = dirname(dirname(abspath(__file__)))
+sys.path.append(d)
+from database.db_update_class import db
 
 def count_rows(cursor):
     res = cursor.fetchone()
@@ -11,13 +13,13 @@ def count_rows(cursor):
 class database_test_cases(unittest.TestCase):
     def setUp(self):
         self.db = db()
-        self.sql_count_article = 'SELECT count(article_id) FROM Holli.articles'
-        self.sql_count_question = 'SELECT count(question_id) FROM Holli.questions'
-        self.sql_count_history = 'SELECT count(history_id) FROM Holli.user_history'
+        self.sql_count_article = 'SELECT count(article_id) FROM HooliASE.articles'
+        self.sql_count_question = 'SELECT count(question_id) FROM HooliASE.questions'
+        self.sql_count_history = 'SELECT count(history_id) FROM HooliASE.history'
 
-        self.sql_delete_article = 'DELETE from Holli.articles WHERE article_id=%s'
-        self.sql_delete_question = 'DELETE from Holli.questions WHERE question_id=%s'
-        self.sql_delete_history = 'DELETE from Holli.user_history WHERE history_id=%s'
+        self.sql_delete_article = 'DELETE from HooliASE.articles WHERE article_id=%s'
+        self.sql_delete_question = 'DELETE from HooliASE.questions WHERE question_id=%s'
+        self.sql_delete_history = 'DELETE from HooliASE.history WHERE history_id=%s'
 
     # add_article(title, content)
     def test_add_article(self):
@@ -137,6 +139,9 @@ class database_test_cases(unittest.TestCase):
         self.db.mycursor.execute(self.sql_count_history)
         new_row_history = count_rows(self.db.mycursor)
         self.assertEqual(new_row_history,ori_row_history)
+
+    def close_db(self):
+        self.db.db.close()
 
 if __name__ == '__main__':
     unittest.main()
