@@ -6,10 +6,13 @@ from config import cognito_userpool_id, cognito_app_client_id
 from models.r_net.inference import Inference
 import wikipedia
 from rake_nltk import Rake
+from database.db_update_class import db
+from datetime import datetime
 
 inference = Inference()
 
 app = Flask(__name__)
+database = db()
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -40,6 +43,7 @@ def signup():
             cognito.add_base_attributes(email=request.form['email'])
             try:
                 cognito.register(username=request.form['username'], password=request.form['password'])
+                user_id = database.add_user(request.form['username'],request.form['password'],request.form['email'])
             except Exception as e:
                 print(e)
                 error = str(e)
@@ -79,6 +83,9 @@ def with_context():
     if 'username' in session:
         if request.method == 'POST':
             flash(inference.response(context=request.form['passage'], question=request.form['question']))
+            user_id = database.get_id_by_name(session['username'])
+            keyword = str(datetime.now())
+            database.update(user_id,keyword,request.form['passage'],request.form['question'])
         return render_template('with_context.html', username=session['username'])
     else:
         return redirect(url_for('login'))
@@ -93,6 +100,8 @@ def without_context():
             keyword = keywords[0]
             passage = wikipedia.page(keyword).summary
             flash(inference.response(passage, question=request.form['question']))
+            user_id = database.get_id_by_name(session['username'])
+            database.update(user_id,keyword,passage,request.form['question'])
         return render_template('without_context.html', username=session['username'])
     else:
         return redirect(url_for('login'))
