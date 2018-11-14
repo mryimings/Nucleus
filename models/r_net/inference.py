@@ -2,7 +2,10 @@ import tensorflow as tf
 import os
 import numpy as np
 import ujson as json
-
+import sys
+from os.path import dirname, abspath
+d = dirname(dirname(dirname(abspath(__file__))))
+sys.path.append(d)
 from models.r_net.func import cudnn_gru, native_gru, dot_attention, summ, ptr_net
 from models.r_net.prepro import word_tokenize, convert_idx
 from os.path import dirname, abspath

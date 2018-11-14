@@ -3,8 +3,6 @@ import os
 from os.path import dirname, abspath
 parent_dir = dirname(dirname(abspath(__file__)))
 
-# 123
-
 # the test cases for database
 class database_test_cases(unittest.TestCase):
     def setUp(self):
