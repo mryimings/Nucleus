@@ -1,13 +1,16 @@
-import unittest
 import sys
+import unittest
 from os.path import dirname, abspath
+
 d = dirname(dirname(abspath(__file__)))
 sys.path.append(d)
 from database.db_update_class import db
 
+
 def count_rows(cursor):
     res = cursor.fetchone()
     return res[0]
+
 
 # the test cases for database
 class database_test_cases(unittest.TestCase):
@@ -33,7 +36,7 @@ class database_test_cases(unittest.TestCase):
         # assert the success of insertion
         self.db.mycursor.execute(self.sql_count_article)
         new_row = count_rows(self.db.mycursor)
-        self.assertEqual(new_row,ori_row+1)
+        self.assertEqual(new_row, ori_row + 1)
 
         # delete the test record
         self.db.mycursor.execute(self.sql_delete_article, (article_id,))
@@ -42,7 +45,7 @@ class database_test_cases(unittest.TestCase):
         # assert the deletion of test record
         self.db.mycursor.execute(self.sql_count_article)
         new_row = count_rows(self.db.mycursor)
-        self.assertEqual(new_row,ori_row)
+        self.assertEqual(new_row, ori_row)
 
     # add_question(self, art_id, q_content):
     def test_add_question(self):
@@ -99,8 +102,7 @@ class database_test_cases(unittest.TestCase):
         self.db.mycursor.execute(self.sql_count_history)
         ori_row_history = count_rows(self.db.mycursor)
 
-        flag_art, art_id, flag_q, q_id, h_id = \
-            self.db.update(1,'Hooli', 'We are the team of Hooli','who are we?')
+        flag_art, art_id, flag_q, q_id, h_id = self.db.update(1, 'Hooli', 'We are the team of Hooli', 'who are we?')
 
         self.db.mycursor.execute(self.sql_count_article)
         new_row_article = count_rows(self.db.mycursor)
@@ -113,13 +115,13 @@ class database_test_cases(unittest.TestCase):
             c = 0
         else:
             c = 1
-        self.assertEqual(new_row_article,ori_row_article+c)
-        self.assertEqual(new_row_history,ori_row_history+1)
+        self.assertEqual(new_row_article, ori_row_article + c)
+        self.assertEqual(new_row_history, ori_row_history + 1)
         if flag_q:
             c = 0
         else:
             c = 1
-        self.assertEqual(new_row_question,ori_row_question+c)
+        self.assertEqual(new_row_question, ori_row_question + c)
 
         if not flag_art:
             self.db.mycursor.execute(self.sql_delete_article, (art_id,))
@@ -132,16 +134,17 @@ class database_test_cases(unittest.TestCase):
 
         self.db.mycursor.execute(self.sql_count_article)
         new_row_article = count_rows(self.db.mycursor)
-        self.assertEqual(new_row_article,ori_row_article)
+        self.assertEqual(new_row_article, ori_row_article)
         self.db.mycursor.execute(self.sql_count_question)
         new_row_question = count_rows(self.db.mycursor)
-        self.assertEqual(new_row_question,ori_row_question)
+        self.assertEqual(new_row_question, ori_row_question)
         self.db.mycursor.execute(self.sql_count_history)
         new_row_history = count_rows(self.db.mycursor)
-        self.assertEqual(new_row_history,ori_row_history)
+        self.assertEqual(new_row_history, ori_row_history)
 
     def close_db(self):
         self.db.db.close()
+
 
 if __name__ == '__main__':
     unittest.main()
