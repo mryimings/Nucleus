@@ -39,20 +39,49 @@ class db():
 
 
     def update(self,user_id, title, content, question):
-        try:
-            self.mycursor.execute('SELECT article_id FROM articles WHERE article_title={}'.format(title))
-            art_id = self.mycursor.fetchall()
-            flag_art = True
-        except mysql.connector.errors.ProgrammingError:
+        flag_art,flag_q = True, True
+        self.mycursor.execute("SELECT article_id FROM articles WHERE article_title='{}'".format(title))
+        art_id = self.mycursor.fetchall()
+        if not art_id:
             flag_art = False
             art_id = self.add_article(title, content)
-
-        try:
-            self.mycursor.execute('SELECT question_id FROM questions WHERE question_content={} and article_id={}'.format(question,art_id))
-            q_id = self.mycursor.fetchall()
-            flag_q = True
-        except mysql.connector.errors.ProgrammingError:
+        else:
+            art_id = art_id[0][0]
+        self.mycursor.execute("SELECT question_id FROM questions WHERE question_content='{}' and article_id={}".format(question,art_id))
+        q_id = self.mycursor.fetchall()
+        if not q_id:
             flag_q = False
             q_id = self.add_question(art_id, question)
+        else:
+            q_id = q_id[0][0]
         h_id = self.add_history(user_id, q_id)
         return flag_art,art_id,flag_q,q_id,h_id
+
+
+    def get_id_by_name(self, username):
+        sql = "SELECT user_id FROM users WHERE name = '{}'".format(username)
+        self.mycursor.execute(sql)
+        user_id = self.mycursor.fetchall()
+        if len(user_id) > 0:
+            return user_id[0][0]
+        else:
+            print("no username found, return -1")
+            return -1
+
+
+    def get_history_list(self, name, limit):
+        user_id = self.get_id_by_name(name)
+        history = []
+        self.mycursor.execute('SELECT question_id FROM history WHERE user_id={} ORDER BY history_id DESC LIMIT {}'.format(user_id, limit))
+        q_ids = self.mycursor.fetchall()
+        if len(q_ids)==0:
+             print('no correspoding history found, return -1')
+             return -1
+        for q_id in q_ids:
+            q_id = q_id[0]
+            self.mycursor.execute("SELECT question_content, article_id FROM questions WHERE question_id={}".format(q_id))
+            q_content, a_id = self.mycursor.fetchall()[0]
+            self.mycursor.execute("SELECT article_content, article_title FROM articles WHERE article_id={}".format(a_id))
+            a_content, a_title = self.mycursor.fetchall()[0]
+            history.append((a_title,a_content,q_content))
+        return history
