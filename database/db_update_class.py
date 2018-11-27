@@ -12,34 +12,57 @@ class db():
     def add_user(self, user_name, user_pwd, user_email):
         sql = 'INSERT INTO users (name, password, email) VALUES (%s, %s, %s)'
         val = (user_name, user_pwd, user_email)
-        self.mycursor.execute(sql, val)
-        self.db.commit()
-        return self.mycursor.lastrowid
+        if not (user_name == '' or user_pwd == '' or user_email == ''):
+            self.mycursor.execute(sql, val)
+            self.db.commit()
+            return self.mycursor.lastrowid
+        print('invalid input')
+        return
 
     def add_article(self, title, content):
         sql = 'INSERT INTO articles (article_title, article_content) VALUES (%s, %s)'
         val = (title, content)
-        self.mycursor.execute(sql, val)
-        self.db.commit()
-        return self.mycursor.lastrowid
+        if type(title)==str and type(content)==str and \
+                not (title == '' or content == '' or len(title)>45):
+            self.mycursor.execute(sql, val)
+            self.db.commit()
+            return self.mycursor.lastrowid
+        print('invalid input')
+        return
 
     def add_question(self, art_id, q_content):
         sql = 'INSERT INTO questions (article_id, question_content) VALUES (%s, %s)'
         val = (art_id, q_content)
-        self.mycursor.execute(sql, val)
-        self.db.commit()
-        return self.mycursor.lastrowid
+        if art_id is not None and type(art_id)==int and type(q_content)==str and \
+                not (art_id < 0 or q_content == '' or len(q_content)>45):
+            self.mycursor.execute(sql, val)
+            self.db.commit()
+            return self.mycursor.lastrowid
+        print('invalid input')
+        return
 
     def add_history(self, u_id, q_id):
         sql = 'INSERT INTO history (user_id, question_id) VALUES (%s, %s)'
         val = (u_id, q_id)
-        self.mycursor.execute(sql, val)
-        self.db.commit()
-        return self.mycursor.lastrowid
+        if u_id is not None and q_id is not None and type(u_id)==int and type(q_id)==int \
+                and not (u_id < 0 or q_id < 0):
+            self.mycursor.execute(sql, val)
+            self.db.commit()
+            return self.mycursor.lastrowid
+        print('negative input')
+        return
 
     def update(self, user_id, title, content, question):
         flag_art, flag_q = True, True
-
+        type_cond = type(user_id)==int and type(title)==str and type(content)==str and type(question)==str
+        if user_id == None:
+            return
+        if not type_cond or \
+                (title == '' or content == '' or question == '' or user_id < 0):
+            return
+        length_cond = len(title)<45 and len(question)<45
+        if not length_cond:
+            return
         # locate article id
         self.mycursor.execute("SELECT article_id FROM articles WHERE article_title='{}'".format(title))
         art_id = self.mycursor.fetchall()

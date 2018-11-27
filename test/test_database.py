@@ -47,6 +47,37 @@ class database_test_cases(unittest.TestCase):
         new_row = count_rows(self.db.mycursor)
         self.assertEqual(new_row, ori_row)
 
+    def test_add_article_missing_argument(self):
+        # count the original row number
+        self.db.mycursor.execute(self.sql_count_article)
+        ori_row = count_rows(self.db.mycursor)
+
+        # set argument blank for testing
+        self.db.add_article('','')
+        self.db.add_article('', 's')
+        self.db.add_article('s', '')
+
+        # assert the success of insertion
+        self.db.mycursor.execute(self.sql_count_article)
+        new_row = count_rows(self.db.mycursor)
+        self.assertEqual(new_row, ori_row)
+
+    def test_add_article_long_title(self):
+        # count the original row number
+        self.db.mycursor.execute(self.sql_count_article)
+        ori_row = count_rows(self.db.mycursor)
+
+        # set argument blank for testing
+        s = ''
+        for i in range(50):
+            s += 's'
+        self.db.add_article(s,'content')
+
+        # assert the success of insertion
+        self.db.mycursor.execute(self.sql_count_article)
+        new_row = count_rows(self.db.mycursor)
+        self.assertEqual(new_row, ori_row)
+
     # add_question(self, art_id, q_content):
     def test_add_question(self):
         # count the original row number
@@ -54,7 +85,7 @@ class database_test_cases(unittest.TestCase):
         ori_row = count_rows(self.db.mycursor)
 
         # add a new test record into questions table
-        question_id = self.db.add_question('1', 'what do we love?')
+        question_id = self.db.add_question(1, 'what do we love?')
 
         # assert the success of insertion
         self.db.mycursor.execute(self.sql_count_question)
@@ -70,6 +101,52 @@ class database_test_cases(unittest.TestCase):
         new_row = count_rows(self.db.mycursor)
         self.assertEqual(new_row, ori_row)
 
+    def test_add_question_missing_argument(self):
+        # count the original row number
+        self.db.mycursor.execute(self.sql_count_question)
+        ori_row = count_rows(self.db.mycursor)
+
+        # add a new test record into questions table
+        self.db.add_question(None, '')
+        self.db.add_question(1, '')
+        self.db.add_question(None, 's')
+
+        # assert the success of insertion
+        self.db.mycursor.execute(self.sql_count_question)
+        new_row = count_rows(self.db.mycursor)
+        self.assertEqual(new_row, ori_row)
+
+    def test_add_question_wrong_id(self):
+        # count the original row number
+        self.db.mycursor.execute(self.sql_count_question)
+        ori_row = count_rows(self.db.mycursor)
+
+        # add a new test record into questions table
+        self.db.add_question('w', 'question')
+        self.db.add_question(-1, '')
+
+        # assert the success of insertion
+        self.db.mycursor.execute(self.sql_count_question)
+        new_row = count_rows(self.db.mycursor)
+        self.assertEqual(new_row, ori_row)
+
+    def test_add_question_long_question(self):
+        # count the original row number
+        self.db.mycursor.execute(self.sql_count_question)
+        ori_row = count_rows(self.db.mycursor)
+
+        # add a new test record into questions table
+        s = ''
+        for i in range(1000):
+            s += 's'
+        self.db.add_question(1, s)
+
+        # assert the success of insertion
+        self.db.mycursor.execute(self.sql_count_question)
+        new_row = count_rows(self.db.mycursor)
+        self.assertEqual(new_row, ori_row)
+
+
     # add_history(self,u_id, q_id)
     def test_add_history(self):
         # count the original row number
@@ -77,7 +154,7 @@ class database_test_cases(unittest.TestCase):
         ori_row = count_rows(self.db.mycursor)
 
         # add a new test record into history table
-        history_id = self.db.add_history('1', '2')
+        history_id = self.db.add_history(1, 2)
 
         # assert the success of insertion
         self.db.mycursor.execute(self.sql_count_history)
@@ -89,6 +166,64 @@ class database_test_cases(unittest.TestCase):
         self.db.db.commit()
 
         # assert the deletion of test record
+        self.db.mycursor.execute(self.sql_count_history)
+        new_row = count_rows(self.db.mycursor)
+        self.assertEqual(new_row, ori_row)
+
+    # add_history(self,u_id, q_id)
+    def test_add_history_at_bound(self):
+        # count the original row number
+        self.db.mycursor.execute(self.sql_count_history)
+        ori_row = count_rows(self.db.mycursor)
+
+        # add a new test record into history table
+        history_id = self.db.add_history(0, 0)
+
+        # assert the success of insertion
+        self.db.mycursor.execute(self.sql_count_history)
+        new_row = count_rows(self.db.mycursor)
+        self.assertEqual(new_row, ori_row + 1)
+
+        # delete the test record
+        self.db.mycursor.execute(self.sql_delete_history, (history_id,))
+        self.db.db.commit()
+
+        # assert the deletion of test record
+        self.db.mycursor.execute(self.sql_count_history)
+        new_row = count_rows(self.db.mycursor)
+        self.assertEqual(new_row, ori_row)
+
+    # add_history(self,u_id, q_id)
+    def test_add_history_missing_argument(self):
+        # count the original row number
+        self.db.mycursor.execute(self.sql_count_history)
+        ori_row = count_rows(self.db.mycursor)
+
+        # add a new test record into history table
+        self.db.add_history(None, None)
+        self.db.add_history(1, None)
+        self.db.add_history(None, 2)
+        self.db.add_history('s', '2')
+
+
+        # assert the success of insertion
+        self.db.mycursor.execute(self.sql_count_history)
+        new_row = count_rows(self.db.mycursor)
+        self.assertEqual(new_row, ori_row)
+
+    # add_history(self,u_id, q_id)
+    def test_add_history_out_of_bound(self):
+        # count the original row number
+        self.db.mycursor.execute(self.sql_count_history)
+        ori_row = count_rows(self.db.mycursor)
+
+        # add a new test record into history table
+        self.db.add_history(-1, 2)
+        self.db.add_history(1, -2)
+        self.db.add_history(-1, -2)
+
+
+        # assert the success of insertion
         self.db.mycursor.execute(self.sql_count_history)
         new_row = count_rows(self.db.mycursor)
         self.assertEqual(new_row, ori_row)
@@ -141,6 +276,81 @@ class database_test_cases(unittest.TestCase):
         self.db.mycursor.execute(self.sql_count_history)
         new_row_history = count_rows(self.db.mycursor)
         self.assertEqual(new_row_history, ori_row_history)
+
+    # update(self,user_id, title, content, question)
+    def test_update_missing_argument(self):
+        self.db.mycursor.execute(self.sql_count_article)
+        ori_row_article = count_rows(self.db.mycursor)
+        self.db.mycursor.execute(self.sql_count_question)
+        ori_row_question = count_rows(self.db.mycursor)
+        self.db.mycursor.execute(self.sql_count_history)
+        ori_row_history = count_rows(self.db.mycursor)
+
+        self.db.update(None, 'Hooli', 'We are the team of Hooli', 'who are we?')
+        self.db.update(1, '', 'We are the team of Hooli', 'who are we?')
+        self.db.update(1, 'Hooli', '', 'who are we?')
+        self.db.update(1, 'Hooli', 'We are the team of Hooli', '')
+
+
+        self.db.mycursor.execute(self.sql_count_article)
+        new_row_article = count_rows(self.db.mycursor)
+        self.db.mycursor.execute(self.sql_count_question)
+        new_row_question = count_rows(self.db.mycursor)
+        self.db.mycursor.execute(self.sql_count_history)
+        new_row_history = count_rows(self.db.mycursor)
+
+        self.assertEqual(new_row_article, ori_row_article)
+        self.assertEqual(new_row_history, ori_row_history)
+        self.assertEqual(new_row_question, ori_row_question)
+
+    def test_update_mistype_input(self):
+        self.db.mycursor.execute(self.sql_count_article)
+        ori_row_article = count_rows(self.db.mycursor)
+        self.db.mycursor.execute(self.sql_count_question)
+        ori_row_question = count_rows(self.db.mycursor)
+        self.db.mycursor.execute(self.sql_count_history)
+        ori_row_history = count_rows(self.db.mycursor)
+
+        self.db.update(1, 1, 'We are the team of Hooli', 'who are we?')
+        self.db.update(1, 'Hooli', 2, 'who are we?')
+        self.db.update(1, 'Hooli', 'We are the team of Hooli', 3)
+
+
+        self.db.mycursor.execute(self.sql_count_article)
+        new_row_article = count_rows(self.db.mycursor)
+        self.db.mycursor.execute(self.sql_count_question)
+        new_row_question = count_rows(self.db.mycursor)
+        self.db.mycursor.execute(self.sql_count_history)
+        new_row_history = count_rows(self.db.mycursor)
+
+        self.assertEqual(new_row_article, ori_row_article)
+        self.assertEqual(new_row_history, ori_row_history)
+        self.assertEqual(new_row_question, ori_row_question)
+
+    def test_update_long_input(self):
+        self.db.mycursor.execute(self.sql_count_article)
+        ori_row_article = count_rows(self.db.mycursor)
+        self.db.mycursor.execute(self.sql_count_question)
+        ori_row_question = count_rows(self.db.mycursor)
+        self.db.mycursor.execute(self.sql_count_history)
+        ori_row_history = count_rows(self.db.mycursor)
+        s = ''
+        for i in range(100):
+            s += 's'
+        self.db.update(1, s, 'We are the team of Hooli', 'who are we?')
+        self.db.update(1, 'Hooli', 'freugf', s)
+
+
+        self.db.mycursor.execute(self.sql_count_article)
+        new_row_article = count_rows(self.db.mycursor)
+        self.db.mycursor.execute(self.sql_count_question)
+        new_row_question = count_rows(self.db.mycursor)
+        self.db.mycursor.execute(self.sql_count_history)
+        new_row_history = count_rows(self.db.mycursor)
+
+        self.assertEqual(new_row_article, ori_row_article)
+        self.assertEqual(new_row_history, ori_row_history)
+        self.assertEqual(new_row_question, ori_row_question)
 
     def close_db(self):
         self.db.db.close()
