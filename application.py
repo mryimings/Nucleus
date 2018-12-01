@@ -99,12 +99,32 @@ def without_context():
             keywords = rake.get_ranked_phrases()
             keyword = keywords[0]
             passage = wikipedia.page(keyword).summary
-            flash(inference.response(passage, question=request.form['question']))
+            answer = inference.response(passage, question=request.form['question'])
+            flash(answer)
             user_id = database.get_id_by_name(session['username'])
             database.update(user_id,keyword,passage,request.form['question'])
-        return render_template('without_context.html', username=session['username'])
+            return redirect(url_for('result', question=request.form['question'], answer=answer))
+        else:
+            return render_template('without_context.html', username=session['username'])
     else:
         return redirect(url_for('login'))
+    
+@app.route('/result', methods=['GET', 'POST'])
+def result(question="This is default question", answer="This is the default message"):
+    if 'username' in session:
+        print("Question", question)
+        print("Answer", answer)
+        return render_template('result.html', username=session['username'])
+    else:
+        return redirect(url_for('login'))
+    
+@app.route('/satisfied', methods=['GET', 'POST'])
+def satisfied():
+    return 'I am satisfied'
+
+@app.route('/unsatisfied', methods=['GET', 'POST'])
+def unsatisfied():
+    return 'I am not satisfied'
 
 def valid_login(username, password):
     cognito = Cognito(cognito_userpool_id, cognito_app_client_id, username=username)
