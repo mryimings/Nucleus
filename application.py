@@ -99,10 +99,49 @@ def without_context():
             keywords = rake.get_ranked_phrases()
             keyword = keywords[0]
             passage = wikipedia.page(keyword).summary
-            flash(inference.response(passage, question=request.form['question']))
+            answer = inference.response(passage, question=request.form['question'])
+            flash("The answer of your question is: {}".format(answer))
             user_id = database.get_id_by_name(session['username'])
             database.update(user_id,keyword,passage,request.form['question'])
-        return render_template('without_context.html', username=session['username'])
+            return redirect(url_for('result', question=request.form['question'], answer=answer))
+        else:
+            return render_template('without_context.html', username=session['username'])
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/result/<question>/<answer>', methods=['GET', 'POST'])
+def result(question="", answer=""):
+    if 'username' in session:
+        print("Question", question)
+        print("Answer", answer)
+        return render_template('result.html', username=session['username'], question=question, answer=answer)
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/satisfied/<question>/<answer>', methods=['GET', 'POST'])
+def satisfied(question="", answer=""):
+    if 'username' in session:
+        print("Satisfied Question:", question)
+        print("Satisfied Answer:", answer)
+        # TODO: save it to database
+        return render_template('satisfied.html', username=session['username'], question=question, answer=answer)
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/unsatisfied/<question>/<answer>', methods=['GET', 'POST'])
+def unsatisfied(question="", answer=""):
+    if 'username' in session:
+        if request.method == 'GET':
+            print("Method: GET. Unsatisfied Question:", question)
+            print("Method: GET. Unsatisfied Answer:", answer)
+            return render_template('unsatisfied.html', username=session['username'], question=question, answer=answer)
+        else:
+            print("Method: POST. Unsatisfied Question:", question)
+            print("Method: POST. Unsatisfied Answer:", answer)
+            print("Method: POST. Unsatisfied expected_answer:", request.form['expected_answer'])
+            flash("Your feedback has been recorded! Thank you for helping us improving Nucleus!")
+            # TODO: save it to database
+            return redirect(url_for('welcome'))
     else:
         return redirect(url_for('login'))
 
