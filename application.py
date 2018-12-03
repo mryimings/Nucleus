@@ -27,10 +27,12 @@ def login():
             app.logger.warning('Incorrect Username and password for user (%s)', request.form.get('username'))
     return render_template('login.html', error=error)
 
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
+
 
 @app.route('/signup', methods=['GET', "POST"])
 def signup():
@@ -53,6 +55,7 @@ def signup():
             return redirect(url_for('verification'))
     return render_template('signup.html', error=error)
 
+
 @app.route('/verification', methods=['GET', 'POST'])
 def verification():
     if 'username' in session:
@@ -70,6 +73,7 @@ def verification():
         return render_template("verification.html")
     else:
         return redirect(url_for('login'))
+
 
 @app.route('/', methods=['GET', 'POST'])
 def welcome():
