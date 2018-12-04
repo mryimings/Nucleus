@@ -1,31 +1,93 @@
-{% extends "base.html" %}
+<!--{% extends "base.html" %}-->
 
-{% block title %}With Context{% endblock%}
+<!--{% block title %}With Context{% endblock%}-->
 
-{% block head %}
-{{ super() }}
-    <script type="text/javascipt">var x = 1;</script>
-{% endblock %}
+<!--{% block head %}-->
+<!--{{ super() }}-->
+    <!--<script type="text/javascipt">var x = 1;</script>-->
+<!--{% endblock %}-->
 
-{% block content %}
+<!--{% block content %}-->
 
-<p> Welcome, {{ username }} - <a href="{{ url_for('logout') }}">logout</a></p>
+<!--<p> Welcome, {{ username }} - <a href="{{ url_for('logout') }}">logout</a></p>-->
 
-<form action="{{ url_for('with_context') }}" method="POST">
-    {% if error %}
-    <p style="color:#8d69ff">
-        {{ error }}
-    </p>
-    {% endif %}
-    <p>
-        Passage: <input type="text" name="passage">
-    </p>
-    <p>
-        Questions: <input type="text" name="question">
-    </p>
-    <button type="Submit">Submit</button>
-</form>
+<!--<form action="{{ url_for('with_context') }}" method="POST">-->
+    <!--{% if error %}-->
+    <!--<p style="color:#8d69ff">-->
+        <!--{{ error }}-->
+    <!--</p>-->
+    <!--{% endif %}-->
+    <!--<p>-->
+        <!--Passage: <input type="text" name="passage">-->
+    <!--</p>-->
+    <!--<p>-->
+        <!--Questions: <input type="text" name="question">-->
+    <!--</p>-->
+    <!--<button type="Submit">Submit</button>-->
+<!--</form>-->
 
-<p><a href="{{ url_for('welcome') }}">Go back to welcome page</a></p>
+<!--<p><a href="{{ url_for('welcome') }}">Go back to welcome page</a></p>-->
 
-{% endblock %}
+<!--{% endblock %}-->
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Connective Login Form a Responsive Widget Template :: w3layouts</title>
+<!-- meta_tags-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="connective login form a Flat Responsive Widget,Login form widgets, Sign up Web forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- Meta_tag_Keywords -->
+<link href="css/context_style.css" rel="stylesheet" type="text/css" media="all"><!--style_sheet-->
+<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all"><!--font_awesome_icons-->
+<!--web_fonts-->
+<link href="//fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900&amp;subset=latin-ext" rel="stylesheet">
+<!--//web_fonts-->
+</head>
+<body>
+<div class="form">
+<h1>Nucleus</h1>
+	<div class="form-content">
+		<form action="{{ url_for('with_context') }}" method="post">
+			<div class="form-info">
+				<h2>Please input the article and the question:</h2>
+			</div>
+			<!--<div class="email-w3l">-->
+				<!--<span class="i1"><i class="fa fa-user-o" aria-hidden="true"></i></span>-->
+                <!--<input class="email" type="text" name="username" placeholder="Username" required="">-->
+			<!--</div>-->
+            <div class="form-content">
+                <textarea class="email-w3l" type="text" cols="120" rows="12" name="passage" placeholder="Type in or copy the article here." required=""></textarea>
+            </div>
+            <div class="form-content">
+                <textarea class="email-w3l" type="text" cols="120" rows="12" name="question" placeholder="Type in or copy the question here." required=""></textarea>
+            </div>
+            <div class="submit-agileits">
+                <center><input class="login" align="middle" type="submit" value="submit"></center>
+			</div>
+			<div class="form-check">
+				<div class="left">
+					<!--<input type="checkbox" value="Remember me">Remember me-->
+					<a href="{{ url_for('logout') }}"><font color="white">Logout</font></a>
+				</div>
+				<div class="right">
+                    <a href="{{ url_for('welcome') }}"><font color="white">Back</font></a>
+				</div>
+				<div class="clear"></div>
+			</div>
+
+		</form>
+	</div>
+</div>
+<!---728x90--->
+<!--<footer>&copy; 2018 Connective login form. All rights reserved | Design by <a href="#">W3layouts</a></footer>-->
+<!---728x90--->
+</body>
+</html>
