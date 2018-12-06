@@ -144,6 +144,19 @@ def unsatisfied(question="", answer=""):
             return redirect(url_for('welcome'))
     else:
         return redirect(url_for('login'))
+    
+@app.route('/history/', methods=['GET', 'POST'])
+def history():
+    if 'username' in session:
+        if request.method == 'POST':
+            num = request.form['num']
+            requested_history = database.get_history_list(name=session['username'], limit=num)
+            # TODO: send history to frontend
+            return "TO DO"
+        else:
+            return render_template('history.html', username=session['username'])
+    else:
+        return redirect(url_for('login'))
 
 def valid_login(username, password):
     cognito = Cognito(cognito_userpool_id, cognito_app_client_id, username=username)
