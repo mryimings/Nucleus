@@ -27,7 +27,6 @@ def login():
             app.logger.warning('Incorrect Username and password for user (%s)', request.form.get('username'))
     return render_template('login.html', error=error)
 
-
 @app.route('/logout')
 def logout():
     session.pop('username', None)

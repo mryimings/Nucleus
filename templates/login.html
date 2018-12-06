@@ -1,47 +1,15 @@
-<!--{% extends "base.html" %}-->
-
-<!--{% block title %}Login{% endblock %}-->
-
-<!--{% block content %}-->
-<!--<form action="{{ url_for('login') }}" method="POST">-->
-    <!--{% if error %}-->
-    <!--<p style="color:#8d69ff">-->
-        <!--{{ error }}-->
-    <!--</p>-->
-    <!--{% endif %}-->
-    <!--<p>-->
-        <!--Username: <input type="text" name="username">-->
-    <!--</p>-->
-    <!--<p>-->
-        <!--Password: <input type="password" name="password">-->
-    <!--</p>-->
-    <!--<button type="Submit">Login</button>-->
-<!--</form>-->
-<!--<p>Didn't have an account yet? <a href="{{ url_for('signup') }}">Sign Up</a> here.</p>-->
-<!--{% endblock %}-->
-
-<!--
-Author: W3layouts
-Author URL: http://w3layouts.com
-License: Creative Commons Attribution 3.0 Unported
-License URL: http://creativecommons.org/licenses/by/3.0/
--->
 <!DOCTYPE html>
 <html>
 <head>
 <title>Connective Login Form a Responsive Widget Template :: w3layouts</title>
-<!-- meta_tags-->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="keywords" content="connective login form a Flat Responsive Widget,Login form widgets, Sign up Web forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements" />
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
 function hideURLbar(){ window.scrollTo(0,1); } </script>
-<!-- Meta_tag_Keywords -->
-<link href="css/style.css" rel="stylesheet" type="text/css" media="all"><!--style_sheet-->
-<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all"><!--font_awesome_icons-->
-<!--web_fonts-->
+<link href="{{ url_for('static', filename=css/style.css)}}" rel="stylesheet" type="text/css" media="all"><!--style_sheet-->
+<link href="{{ url_for('static', css/font-awesome.min.css)}}" rel="stylesheet" type="text/css" media="all"><!--font_awesome_icons-->
 <link href="//fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900&amp;subset=latin-ext" rel="stylesheet">
-<!--//web_fonts-->
 </head>
 <body>
 <div class="form">
@@ -56,18 +24,13 @@ function hideURLbar(){ window.scrollTo(0,1); } </script>
 				<input class="email" type="text" name="username" placeholder="Username" required="">
 			</div>
 			<div class="pass-w3l">
-			<!---728x90--->
 			<span class="i2"><i class="fa fa-unlock" aria-hidden="true"></i></span>
 				<input class="pass" type="password" name="password" placeholder="Password" required="">
 			</div>
 			<div class="form-check">
 				<div class="left">
-					<!--<input type="checkbox" value="Remember me">Remember me-->
 					<a href="{{ url_for('signup') }}"><font color="white">Sign up?</font></a>
 				</div>
-				<!--<div class="right">-->
-					<!--<a href="#">Forgot Password?</a>-->
-				<!--</div>-->
 				<div class="clear"></div>
 			</div>
 			<div class="submit-agileits">
@@ -76,8 +39,5 @@ function hideURLbar(){ window.scrollTo(0,1); } </script>
 		</form>
 	</div>
 </div>
-<!---728x90--->
-<!--<footer>&copy; 2018 Connective login form. All rights reserved | Design by <a href="#">W3layouts</a></footer>-->
-<!---728x90--->
 </body>
 </html>
