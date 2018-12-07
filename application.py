@@ -38,7 +38,7 @@ def signup():
     error = None
     if request.method == 'POST':
         if len(request.form['password']) < 8:
-            error = 'password too short!'
+            error = 'Password too short!'
         else:
             cognito = Cognito(user_pool_id=cognito_userpool_id, client_id=cognito_app_client_id)
             cognito.add_base_attributes(email=request.form['email'])
