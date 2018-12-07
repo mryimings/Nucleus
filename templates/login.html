@@ -11,6 +11,28 @@ function hideURLbar(){ window.scrollTo(0,1); } </script>
 <link href="{{ url_for('static', filename='css/font-awesome.min.css')}}" rel="stylesheet" type="text/css" media="all"><!--font_awesome_icons-->
 <link href="//fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900&amp;subset=latin-ext" rel="stylesheet">
 </head>
+<style>
+.alert {
+    padding: 20px;
+    background-color: #f44336;
+    color: white;
+}
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: black;
+}
+</style>
 <body>
 <div class="form">
 <h1>Nucleus</h1>
@@ -19,6 +41,12 @@ function hideURLbar(){ window.scrollTo(0,1); } </script>
 			<div class="form-info">
 				<h2>Login</h2>
 			</div>
+            {% if error %}
+                <div class="alert">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    <strong>{{error}}</strong>
+                </div>
+			{% endif %}
 			<div class="email-w3l">
 				<span class="i1"><i class="fa fa-user-o" aria-hidden="true"></i></span>
 				<input class="email" type="text" name="username" placeholder="Username" required="">
