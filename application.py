@@ -32,12 +32,13 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
 
+
 @app.route('/signup', methods=['GET', "POST"])
 def signup():
     error = None
     if request.method == 'POST':
         if len(request.form['password']) < 8:
-            error = 'password too short!'
+            error = 'Password too short!'
         else:
             cognito = Cognito(user_pool_id=cognito_userpool_id, client_id=cognito_app_client_id)
             cognito.add_base_attributes(email=request.form['email'])
@@ -52,6 +53,7 @@ def signup():
             session['username'] = request.form['username']
             return redirect(url_for('verification'))
     return render_template('signup.html', error=error)
+
 
 @app.route('/verification', methods=['GET', 'POST'])
 def verification():
@@ -70,6 +72,7 @@ def verification():
         return render_template("verification.html")
     else:
         return redirect(url_for('login'))
+
 
 @app.route('/', methods=['GET', 'POST'])
 def welcome():
