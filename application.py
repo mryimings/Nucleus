@@ -85,10 +85,14 @@ def welcome():
 def with_context():
     if 'username' in session:
         if request.method == 'POST':
-            flash(inference.response(context=request.form['passage'], question=request.form['question']))
+            # flash(inference.response(context=request.form['passage'], question=request.form['question']))
             user_id = database.get_id_by_name(session['username'])
             keyword = str(datetime.now())
             database.update(user_id,keyword,request.form['passage'],request.form['question'])
+            question = request.form['question']
+            passage = request.form['passage']
+            answer = inference.response(context=passage, question=question)
+            return redirect(url_for('result', question=question, answer=answer))
         return render_template('with_context.html', username=session['username'])
     else:
         return redirect(url_for('login'))
@@ -103,7 +107,7 @@ def without_context():
             keyword = keywords[0]
             passage = wikipedia.page(keyword).summary
             answer = inference.response(passage, question=request.form['question'])
-            flash("The answer of your question is: {}".format(answer))
+            # flash("The answer of your question is: {}".format(answer))
             user_id = database.get_id_by_name(session['username'])
             database.update(user_id,keyword,passage,request.form['question'])
             return redirect(url_for('result', question=request.form['question'], answer=answer))
@@ -144,9 +148,17 @@ def unsatisfied(question="", answer=""):
             print("Method: POST. Unsatisfied expected_answer:", request.form['expected_answer'])
             flash("Your feedback has been recorded! Thank you for helping us improving Nucleus!")
             # TODO: save it to database
-            return redirect(url_for('welcome'))
+            return redirect(url_for('unsatisfied_result'))
     else:
         return redirect(url_for('login'))
+    
+@app.route('/unsatisfied_result', methods=['GET', 'POST'])
+def unsatisfied_result():
+    if 'username' in session:
+        return render_template('unsatisfied_result.html')
+    else:
+        return redirect(url_for('login'))
+
     
 @app.route('/history/', methods=['GET', 'POST'])
 def history():
