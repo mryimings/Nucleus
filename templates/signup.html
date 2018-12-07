@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:font-weight="http://www.w3.org/1999/xhtml">
 <head>
 <title>Connective Login Form a Responsive Widget Template :: w3layouts</title>
 <!-- meta_tags-->
@@ -13,15 +13,47 @@ function hideURLbar(){ window.scrollTo(0,1); } </script>
 <link href="{{ url_for('static', filename='css/font-awesome.min.css')}}" rel="stylesheet" type="text/css" media="all"><!--font_awesome_icons-->
 <link href="//fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900&amp;subset=latin-ext" rel="stylesheet">
 <!--//web_fonts-->
+<style>
+.alert {
+    padding: 20px;
+    background-color: #f44336;
+    color: white;
+}
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: black;
+}
+</style>
 </head>
 <body>
 <div class="form">
 <h1>Nucleus</h1>
 	<div class="form-content">
 		<form action="{{ url_for('signup') }}" method="post">
+			print(request.form['password'])
 			<div class="form-info">
 				<h2>Sign Up</h2>
 			</div>
+
+			{% if error %}
+			<!--<p class="email-w3l" color="#8d69ff">-->
+			<!--<p style="color:#8d69ff; font-weight:bold;" >-->
+			<div class="alert">
+  				<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+  				<strong>{{error}}</strong>
+			</div>
+			{% endif %}
 			<div class="email-w3l">
 				<span class="i1"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
 				<input class="email" type="email" name="email" placeholder="Email" required="">

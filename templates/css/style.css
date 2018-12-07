@@ -27,6 +27,26 @@
 	nav.horizontal ul li{display: inline-block;}
 	img{max-width:100%;}
 /*-- Reset Code --*/
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.alert {
+    padding: 20px;
+    background-color: #f44336;
+    color: white;
+}
+
+.closebtn:hover {
+    color: black;
+}
 
 body {
      background:url("../images/login-img.jpg");
