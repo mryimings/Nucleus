@@ -27,9 +27,22 @@ function hideURLbar(){ window.scrollTo(0,1); } </script>
             <div class="form-content">
                 <textarea class="email-w3l" type="text" cols="120" rows="12" name="expected_answer" placeholder="Type your expected answer here" required=""></textarea>
             </div>
-            <div class="form-content">
-                <textarea class="email-w3l" type="text" cols="120" rows="12" name="score" placeholder="Type your score here" required=""></textarea>
-            </div>
+            <!--<div class="form-content">-->
+                <!--<textarea class="email-w3l" type="text" cols="120" rows="12" name="score" placeholder="Type your score here" required=""></textarea>-->
+            <!--</div>-->
+			<select name="s">
+				<option value=0>0</option>
+				<option value=1>1</option>
+				<option value=2>2</option>
+				<option value=3>3</option>
+				<option value=4>4</option>
+				<option value=5>5</option>
+				<option value=6>6</option>
+				<option value=7>7</option>
+				<option value=8>8</option>
+				<option value=9>9</option>
+				<option value=10>10</option>
+			</select>
             <div class="submit-agileits">
                 <center><input class="login" align="middle" type="submit" value="submit" onsubmit=url_for('welcome')></center>
 			</div>

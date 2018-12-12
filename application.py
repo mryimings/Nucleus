@@ -178,14 +178,14 @@ def history():
 def feedback(question=None, answer=None):
     if 'username' not in session:
         return redirect(url_for('login'))
-    
     if request.method == 'POST':
         pass
-        # TODO add score and expected answer from frontend form
+        # TODO: add score and expected answer from frontend form
         database.user_feedback(session['username'], question, answer, request.form['score'],
                                request.form['expected_answer'])
+        return redirect(url_for("welcome", username=session['username']))
     else:
-        return render_template('feedback.html', username=session['username'])
+        return render_template('feedback.html', username=session['username'], question=question, answer=answer)
 
 def valid_login(username, password):
     cognito = Cognito(cognito_userpool_id, cognito_app_client_id, username=username)
