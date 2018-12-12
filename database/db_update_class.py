@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import mysql.connector
 
 from config import database_endpoint, database_pwd, database_user_name
@@ -22,8 +24,7 @@ class db():
     def add_article(self, title, content):
         sql = 'INSERT INTO articles (article_title, article_content) VALUES (%s, %s)'
         val = (title, content)
-        if type(title)==str and type(content)==str and \
-                not (title == '' or content == '' or len(title)>45):
+        if type(title) == str and type(content) == str and not (title == '' or content == '' or len(title) > 45):
             self.mycursor.execute(sql, val)
             self.db.commit()
             return self.mycursor.lastrowid
@@ -33,8 +34,8 @@ class db():
     def add_question(self, art_id, q_content):
         sql = 'INSERT INTO questions (article_id, question_content) VALUES (%s, %s)'
         val = (art_id, q_content)
-        if art_id is not None and type(art_id)==int and type(q_content)==str and \
-                not (art_id < 0 or q_content == '' or len(q_content)>45):
+        if art_id is not None and type(art_id) == int and type(q_content) == str and not (
+                art_id < 0 or q_content == '' or len(q_content) > 45):
             self.mycursor.execute(sql, val)
             self.db.commit()
             return self.mycursor.lastrowid
@@ -44,8 +45,8 @@ class db():
     def add_history(self, u_id, q_id):
         sql = 'INSERT INTO history (user_id, question_id) VALUES (%s, %s)'
         val = (u_id, q_id)
-        if u_id is not None and q_id is not None and type(u_id)==int and type(q_id)==int \
-                and not (u_id < 0 or q_id < 0):
+        if u_id is not None and q_id is not None and type(u_id) == int and type(q_id) == int and not (
+                u_id < 0 or q_id < 0):
             self.mycursor.execute(sql, val)
             self.db.commit()
             return self.mycursor.lastrowid
@@ -54,13 +55,12 @@ class db():
 
     def update(self, user_id, title, content, question):
         flag_art, flag_q = True, True
-        type_cond = type(user_id)==int and type(title)==str and type(content)==str and type(question)==str
+        type_cond = type(user_id) == int and type(title) == str and type(content) == str and type(question) == str
         if user_id == None:
             return
-        if not type_cond or \
-                (title == '' or content == '' or question == '' or user_id < 0):
+        if not type_cond or (title == '' or content == '' or question == '' or user_id < 0):
             return
-        length_cond = len(title)<45 and len(question)<45
+        length_cond = len(title) < 45 and len(question) < 45
         if not length_cond:
             return
         # locate article id
@@ -122,3 +122,15 @@ class db():
             a_content, a_title = self.mycursor.fetchall()[0]
             history.append((a_title, a_content, q_content))
         return history
+
+    def user_feedback(self, username, question, answer, satisfaction, expected=''):
+        now = datetime.now()
+        formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+        if satisfaction < 0 or satisfaction > 10:
+            return 'Illegal satisfaction number'
+        self.mycursor.execute(
+            'insert into answer_feedback(username, question, returned_answer, satisfaction, expected_answer, time) '
+            'values(%s, %s, %s, %s, %s, %s)', (username, question, answer, satisfaction, expected, formatted_date))
+        self.db.commit()
+        print('Feedback received, thank you!')
+        return self.mycursor.lastrowid
