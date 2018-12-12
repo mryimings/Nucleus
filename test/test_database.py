@@ -19,10 +19,12 @@ class database_test_cases(unittest.TestCase):
         self.sql_count_article = 'SELECT count(article_id) FROM HooliASE.articles'
         self.sql_count_question = 'SELECT count(question_id) FROM HooliASE.questions'
         self.sql_count_history = 'SELECT count(history_id) FROM HooliASE.history'
+        self.sql_count_feedback = 'SELECT count(id) FROM HooliASE.answer_feedback'
 
         self.sql_delete_article = 'DELETE from HooliASE.articles WHERE article_id=%s'
         self.sql_delete_question = 'DELETE from HooliASE.questions WHERE question_id=%s'
         self.sql_delete_history = 'DELETE from HooliASE.history WHERE history_id=%s'
+        self.sql_delete_feedback = 'DELETE from HooliASE.answer_feedback WHERE id=%s'
 
     # add_article(title, content)
     def test_add_article(self):
@@ -351,6 +353,21 @@ class database_test_cases(unittest.TestCase):
         self.assertEqual(new_row_article, ori_row_article)
         self.assertEqual(new_row_history, ori_row_history)
         self.assertEqual(new_row_question, ori_row_question)
+
+    def test_feedback(self):
+        self.db.mycursor.execute(self.sql_count_feedback)
+        ori_row = count_rows(self.db.mycursor)
+
+        feedback_id = self.db.user_feedback('yiming', 'where is NYC', 'MARS', 2, expected='United States')
+
+        self.db.mycursor.execute(self.sql_count_feedback)
+        new_row = count_rows(self.db.mycursor)
+        self.assertEqual(ori_row+1, new_row)
+
+        self.db.mycursor.execute(self.sql_delete_feedback, (feedback_id,))
+        self.db.mycursor.execute(self.sql_count_feedback)
+        new_row = count_rows(self.db.mycursor)
+        self.assertEqual(ori_row,new_row)
 
     def close_db(self):
         self.db.db.close()
