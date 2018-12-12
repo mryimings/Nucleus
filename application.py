@@ -32,12 +32,13 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
 
+
 @app.route('/signup', methods=['GET', "POST"])
 def signup():
     error = None
     if request.method == 'POST':
         if len(request.form['password']) < 8:
-            error = 'password too short!'
+            error = 'Password too short!'
         else:
             cognito = Cognito(user_pool_id=cognito_userpool_id, client_id=cognito_app_client_id)
             cognito.add_base_attributes(email=request.form['email'])
@@ -52,6 +53,7 @@ def signup():
             session['username'] = request.form['username']
             return redirect(url_for('verification'))
     return render_template('signup.html', error=error)
+
 
 @app.route('/verification', methods=['GET', 'POST'])
 def verification():
@@ -71,6 +73,7 @@ def verification():
     else:
         return redirect(url_for('login'))
 
+
 @app.route('/', methods=['GET', 'POST'])
 def welcome():
     if 'username' in session:
@@ -82,10 +85,14 @@ def welcome():
 def with_context():
     if 'username' in session:
         if request.method == 'POST':
-            flash(inference.response(context=request.form['passage'], question=request.form['question']))
+            # flash(inference.response(context=request.form['passage'], question=request.form['question']))
             user_id = database.get_id_by_name(session['username'])
             keyword = str(datetime.now())
             database.update(user_id,keyword,request.form['passage'],request.form['question'])
+            question = request.form['question']
+            passage = request.form['passage']
+            answer = inference.response(context=passage, question=question)
+            return redirect(url_for('result', question=question, answer=answer))
         return render_template('with_context.html', username=session['username'])
     else:
         return redirect(url_for('login'))
@@ -100,7 +107,7 @@ def without_context():
             keyword = keywords[0]
             passage = wikipedia.page(keyword).summary
             answer = inference.response(passage, question=request.form['question'])
-            flash("The answer of your question is: {}".format(answer))
+            # flash("The answer of your question is: {}".format(answer))
             user_id = database.get_id_by_name(session['username'])
             database.update(user_id,keyword,passage,request.form['question'])
             return redirect(url_for('result', question=request.form['question'], answer=answer))
@@ -141,7 +148,28 @@ def unsatisfied(question="", answer=""):
             print("Method: POST. Unsatisfied expected_answer:", request.form['expected_answer'])
             flash("Your feedback has been recorded! Thank you for helping us improving Nucleus!")
             # TODO: save it to database
-            return redirect(url_for('welcome'))
+            return redirect(url_for('unsatisfied_result'))
+    else:
+        return redirect(url_for('login'))
+    
+@app.route('/unsatisfied_result', methods=['GET', 'POST'])
+def unsatisfied_result():
+    if 'username' in session:
+        return render_template('unsatisfied_result.html')
+    else:
+        return redirect(url_for('login'))
+
+    
+@app.route('/history/', methods=['GET', 'POST'])
+def history():
+    if 'username' in session:
+        if request.method == 'POST':
+            num = request.form['num']
+            requested_history = database.get_history_list(name=session['username'], limit=num)
+            # TODO: send history to frontend
+            return "TO DO"
+        else:
+            return render_template('history.html', username=session['username'])
     else:
         return redirect(url_for('login'))
 
@@ -158,4 +186,4 @@ if __name__ == '__main__':
     app.debug = True
     app.secret_key = '\xe3-\xe1\xf7\xfb\x91\xb1\x8c\xae\xf2\xc1BH\xe0/K~~%>ac\t\x01'
     app.run()
-    # 123
+    

@@ -1,21 +1,71 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>Connective Login Form a Responsive Widget Template :: w3layouts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="connective login form a Flat Responsive Widget,Login form widgets, Sign up Web forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+function hideURLbar(){ window.scrollTo(0,1); } </script>
+<link href="{{ url_for('static', filename='css/style.css')}}" rel="stylesheet" type="text/css" media="all"><!--style_sheet-->
+<link href="{{ url_for('static', filename='css/font-awesome.min.css')}}" rel="stylesheet" type="text/css" media="all"><!--font_awesome_icons-->
+<link href="//fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900&amp;subset=latin-ext" rel="stylesheet">
+</head>
+<style>
+.alert {
+    padding: 20px;
+    background-color: #f44336;
+    color: white;
+}
 
-{% block title %}Login{% endblock %}
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
 
-{% block content %}
-<form action="{{ url_for('login') }}" method="POST">
-    {% if error %}
-    <p style="color:#8d69ff">
-        {{ error }}
-    </p>
-    {% endif %}
-    <p>
-        Username: <input type="text" name="username">
-    </p>
-    <p>
-        Password: <input type="password" name="password">
-    </p>
-    <button type="Submit">Login</button>
-</form>
-<p>Didn't have an account yet? <a href="{{ url_for('signup') }}">Sign Up</a> here.</p>
-{% endblock %}
+.closebtn:hover {
+    color: black;
+}
+</style>
+<body>
+<div class="form">
+<h1>Nucleus</h1>
+	<div class="form-content">
+		<form action="{{ url_for('login') }}" method="post">
+			<div class="form-info">
+				<h2>Login</h2>
+			</div>
+            {% if error %}
+                <div class="alert">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    <strong>{{error}}</strong>
+                </div>
+			{% endif %}
+			<div class="email-w3l">
+				<span class="i1"><i class="fa fa-user-o" aria-hidden="true"></i></span>
+				<input class="email" type="text" name="username" placeholder="Username" required="">
+			</div>
+			<div class="pass-w3l">
+			<span class="i2"><i class="fa fa-unlock" aria-hidden="true"></i></span>
+				<input class="pass" type="password" name="password" placeholder="Password" required="">
+			</div>
+			<div class="form-check">
+				<div class="left">
+					<a href="{{ url_for('signup') }}"><font color="white">Sign up?</font></a>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="submit-agileits">
+				<input class="login" type="submit" value="submit">
+			</div>
+		</form>
+	</div>
+</div>
+</body>
+</html>

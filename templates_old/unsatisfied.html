@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Feedback{% endblock%}
+
+{% block content %}
+
+<p> Welcome, {{ username }} - <a href="{{ url_for('logout') }}">logout</a></p>
+
+<p>Thank you for submitting feedback! We are sorry that our answer is unsatisfactory.</p>
+
+<form action="{{ url_for('unsatisfied', question=question, answer=answer) }}" method="POST">
+    {% if error %}
+    <p style="color:#8d69ff">
+        {{ error }}
+    </p>
+    {% endif %}
+    <p>
+        Questions: <input type="text" name="expected_answer">
+    </p>
+    <button type="Submit" onsubmit=url_for('welcome') >Submit</button>
+</form>
+
+<p><a href="{{ url_for('welcome') }}">Go back to welcome page</a></p>
+
+{% endblock %}
