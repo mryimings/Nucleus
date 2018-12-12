@@ -181,6 +181,9 @@ def feedback(question=None, answer=None):
     
     if request.method == 'POST':
         pass
+        # TODO add score and expected answer from frontend form
+        database.user_feedback(session['username'], question, answer, request.form['score'],
+                               request.form['expected_answer'])
     else:
         return render_template('feedback.html', username=session['username'])
 

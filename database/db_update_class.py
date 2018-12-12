@@ -126,11 +126,14 @@ class db():
     def user_feedback(self, username, question, answer, satisfaction, expected=''):
         now = datetime.now()
         formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+        self.mycursor.execute("SELECT * from users WHERE name=%s",(username,))
+        if(len(self.mycursor.fetchall())==0):
+            return "No user found"
         if satisfaction < 0 or satisfaction > 10:
-            return 'Illegal satisfaction number'
+            return "Illegal satisfaction number"
         self.mycursor.execute(
             'insert into answer_feedback(username, question, returned_answer, satisfaction, expected_answer, time) '
             'values(%s, %s, %s, %s, %s, %s)', (username, question, answer, satisfaction, expected, formatted_date))
         self.db.commit()
-        print('Feedback received, thank you!')
+        print("Feedback received, thank you!")
         return self.mycursor.lastrowid
