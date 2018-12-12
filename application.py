@@ -155,7 +155,7 @@ def unsatisfied(question="", answer=""):
 @app.route('/unsatisfied_result', methods=['GET', 'POST'])
 def unsatisfied_result():
     if 'username' in session:
-        return render_template('unsatisfied_result.html')
+        return render_template('unsatisfied_result.html', username=session['username'])
     else:
         return redirect(url_for('login'))
 
@@ -172,6 +172,17 @@ def history():
             return render_template('history.html', username=session['username'])
     else:
         return redirect(url_for('login'))
+    
+    
+@app.route('/feedback/<question>/<answer>', methods=['GET', 'POST'])
+def feedback(question=None, answer=None):
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+        pass
+    else:
+        return render_template('feedback.html', username=session['username'])
 
 def valid_login(username, password):
     cognito = Cognito(cognito_userpool_id, cognito_app_client_id, username=username)

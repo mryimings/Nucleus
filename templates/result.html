@@ -29,6 +29,9 @@ function hideURLbar(){ window.scrollTo(0,1); } </script>
 			<div class="pass-w3l">
                 <li><a href="{{ url_for('unsatisfied', question=question, answer=answer) }}" class="button"><font color="#898989" size="4">I think this result is not what I want</font></a></li>
 			</div>
+			<div class="pass-w3l">
+                <li><a href="{{ url_for('feedback', question=question, answer=answer) }}" class="button"><font color="#898989" size="4">Submit feedback and help us improve Nucleus</font></a></li>
+			</div>
 			<div class="form-check">
 				<div class="left">
                     <a href="{{ url_for('logout') }}" class="button"><font color="white">logout</font></a>
