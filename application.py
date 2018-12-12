@@ -8,6 +8,7 @@ import wikipedia
 from rake_nltk import Rake
 from database.db_update_class import db
 from datetime import datetime
+from wikipedia.exceptions import PageError
 
 inference = Inference()
 
@@ -19,7 +20,6 @@ def login():
     error = None
     if request.method == 'POST':
         if valid_login(request.form['username'], request.form['password']):
-            flash("Successfully logged in")
             session['username'] = request.form.get('username')
             return redirect(url_for('welcome'))
         else:
@@ -49,7 +49,6 @@ def signup():
                 print(e)
                 error = str(e)
                 return render_template('signup.html', error=error)
-            flash("Please check your inbox for verification code")
             session['username'] = request.form['username']
             return redirect(url_for('verification'))
     return render_template('signup.html', error=error)
@@ -85,7 +84,6 @@ def welcome():
 def with_context():
     if 'username' in session:
         if request.method == 'POST':
-            # flash(inference.response(context=request.form['passage'], question=request.form['question']))
             user_id = database.get_id_by_name(session['username'])
             keyword = str(datetime.now())
             database.update(user_id,keyword,request.form['passage'],request.form['question'])
@@ -105,11 +103,16 @@ def without_context():
             rake.extract_keywords_from_text(request.form['question'])
             keywords = rake.get_ranked_phrases()
             keyword = keywords[0]
-            passage = wikipedia.page(keyword).summary
+            try:
+                passage = wikipedia.page(keyword).summary
+            except PageError as e:
+                print(e)
+                return redirect(url_for('result_no_answer'))
             answer = inference.response(passage, question=request.form['question'])
-            # flash("The answer of your question is: {}".format(answer))
             user_id = database.get_id_by_name(session['username'])
             database.update(user_id,keyword,passage,request.form['question'])
+            if not answer:
+                return redirect(url_for('result_no_answer'))
             return redirect(url_for('result', question=request.form['question'], answer=answer))
         else:
             return render_template('without_context.html', username=session['username'])
@@ -124,8 +127,16 @@ def result(question="", answer=""):
         return render_template('result.html', username=session['username'], question=question, answer=answer)
     else:
         return redirect(url_for('login'))
+    
+@app.route('/result_no_answer/', methods=['GET', 'POST'])
+def result_no_answer(question=""):
+    if 'username' in session:
+        print("Question", question)
+        return render_template('result_no_answer.html', username=session['username'])
+    else:
+        return redirect(url_for('login'))
 
-@app.route('/history/', methods=['GET', 'POST'])
+@app.route('/history', methods=['GET', 'POST'])
 def history():
     if 'username' in session:
         if request.method == 'POST':
