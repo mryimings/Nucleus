@@ -176,8 +176,21 @@ def valid_login(username, password):
         return False
     return True
 
+def get_context_list(context, min_len=700):
+    context_list = []
+    assert context
+    p1, p2 = 0, 0
+    while p2 < len(context):
+        p2 += min_len
+        while p2 < len(context) and p2 != '.':
+            p2 += 1
+        context_list.append(context[p1:p2])
+        p1 = p2
+    return context_list
+
 if __name__ == '__main__':
     app.debug = True
     app.secret_key = '\xe3-\xe1\xf7\xfb\x91\xb1\x8c\xae\xf2\xc1BH\xe0/K~~%>ac\t\x01'
     app.run()
+    
     
