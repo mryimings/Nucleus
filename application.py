@@ -125,33 +125,6 @@ def result(question="", answer=""):
     else:
         return redirect(url_for('login'))
 
-@app.route('/satisfied/<question>/<answer>', methods=['GET', 'POST'])
-def satisfied(question="", answer=""):
-    if 'username' in session:
-        print("Satisfied Question:", question)
-        print("Satisfied Answer:", answer)
-        # TODO: save it to database
-        return render_template('satisfied.html', username=session['username'], question=question, answer=answer)
-    else:
-        return redirect(url_for('login'))
-
-@app.route('/unsatisfied/<question>/<answer>', methods=['GET', 'POST'])
-def unsatisfied(question="", answer=""):
-    if 'username' in session:
-        if request.method == 'GET':
-            print("Method: GET. Unsatisfied Question:", question)
-            print("Method: GET. Unsatisfied Answer:", answer)
-            return render_template('unsatisfied.html', username=session['username'], question=question, answer=answer)
-        else:
-            print("Method: POST. Unsatisfied Question:", question)
-            print("Method: POST. Unsatisfied Answer:", answer)
-            print("Method: POST. Unsatisfied expected_answer:", request.form['expected_answer'])
-            flash("Your feedback has been recorded! Thank you for helping us improving Nucleus!")
-            # TODO: save it to database
-            return redirect(url_for('unsatisfied_result'))
-    else:
-        return redirect(url_for('login'))
-    
 @app.route('/history/', methods=['GET', 'POST'])
 def history():
     if 'username' in session:
