@@ -152,14 +152,6 @@ def unsatisfied(question="", answer=""):
     else:
         return redirect(url_for('login'))
     
-@app.route('/unsatisfied_result', methods=['GET', 'POST'])
-def unsatisfied_result():
-    if 'username' in session:
-        return render_template('unsatisfied_result.html', username=session['username'])
-    else:
-        return redirect(url_for('login'))
-
-    
 @app.route('/history/', methods=['GET', 'POST'])
 def history():
     if 'username' in session:
