@@ -179,7 +179,6 @@ def feedback(question=None, answer=None):
     if 'username' not in session:
         return redirect(url_for('login'))
     if request.method == 'POST':
-        
         database.user_feedback(session['username'], question, answer, int(request.form['score']),
                                request.form['expected_answer'])
         return redirect(url_for("welcome", username=session['username']))
