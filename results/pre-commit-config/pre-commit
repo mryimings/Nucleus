@@ -31,7 +31,6 @@ class FatalError(RuntimeError):
 
 def _norm_exe(exe):
     """Necessary for shebang support on windows.
-
     roughly lifted from `identify.identify.parse_shebang`
     """
     with open(exe, 'rb') as f:
