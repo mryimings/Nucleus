@@ -41,6 +41,10 @@ database_pwd = <your_database_password>
 
 Download the model via `https://1drv.ms/f/s!AtfKeiTxgnoqjt0M3lrLoowcsjbKcA`, name the whole dir as `model_data`, and put it to `<root>/models/bert`
 
+### Test cases
+
+To run the test cases, direct into ./test folder, run the three files respectively to test bert mode and database methods.
+
 ### Launch Nucleus
 
 To launch Nucleus, simply run:
