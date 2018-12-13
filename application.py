@@ -15,6 +15,8 @@ inference = Inference()
 app = Flask(__name__)
 database = db()
 
+keyword_topk = 5
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
@@ -101,19 +103,32 @@ def without_context():
         if request.method == 'POST':
             rake = Rake()
             rake.extract_keywords_from_text(request.form['question'])
-            keywords = rake.get_ranked_phrases()
-            keyword = keywords[0]
-            try:
-                passage = wikipedia.page(keyword).summary
-            except PageError as e:
-                print(e)
+            keywords = rake.get_ranked_phrases()[:keyword_topk]
+            context_list = []
+            for keyword in keywords:
+                try:
+                    passage = wikipedia.page(keyword).summary
+                except PageError as e:
+                    print("page not fund")
+                    continue
+                context_list += get_context_list(passage)
+            
+            if not context_list:
                 return redirect(url_for('result_no_answer'))
-            answer = inference.response(passage, question=request.form['question'])
+            
+            feed_dict = {"question": request.form["question"], "context_list": context_list}
+            results = some_func(feed_dict)
+            final_answer = ""
+            max_score = float("-inf")
+            for answer, score in results:
+                if score > max_score:
+                    max_score = score
+                    final_answer = answer
             user_id = database.get_id_by_name(session['username'])
-            database.update(user_id,keyword,passage,request.form['question'])
-            if not answer:
+            database.update(user_id, keyword, passage, request.form['question'])
+            if not final_answer:
                 return redirect(url_for('result_no_answer'))
-            return redirect(url_for('result', question=request.form['question'], answer=answer))
+            return redirect(url_for('result', question=request.form['question'], answer=final_answer))
         else:
             return render_template('without_context.html', username=session['username'])
     else:
