@@ -124,6 +124,7 @@ def without_context():
                 if score > max_score:
                     max_score = score
                     final_answer = answer
+                    
             user_id = database.get_id_by_name(session['username'])
             database.update(user_id, keyword, passage, request.form['question'])
             if not final_answer:

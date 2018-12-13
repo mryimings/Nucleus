@@ -15,6 +15,8 @@ models/r_net/log/*
 *.pem
 nucleus-key-1.pem
 
+draft.py
+
 # C extensions
 *.so
 
