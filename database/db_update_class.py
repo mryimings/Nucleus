@@ -31,9 +31,9 @@ class db():
         print('invalid input')
         return
 
-    def add_question(self, art_id, q_content):
-        sql = 'INSERT INTO questions (article_id, question_content) VALUES (%s, %s)'
-        val = (art_id, q_content)
+    def add_question(self, art_id, q_content, answer):
+        sql = 'INSERT INTO questions (article_id, question_content, answer) VALUES (%s, %s, %s)'
+        val = (art_id, q_content, answer)
         if art_id is not None and type(art_id) == int and type(q_content) == str and not (
                 art_id < 0 or q_content == '' or len(q_content) > 45):
             self.mycursor.execute(sql, val)
@@ -53,7 +53,7 @@ class db():
         print('negative input')
         return
 
-    def update(self, user_id, title, content, question):
+    def update(self, user_id, title, content, question, answer):
         flag_art, flag_q = True, True
         type_cond = type(user_id) == int and type(title) == str and type(content) == str and type(question) == str
         if user_id == None:
@@ -78,7 +78,7 @@ class db():
         q_id = self.mycursor.fetchall()
         if not q_id:
             flag_q = False
-            q_id = self.add_question(art_id, question)
+            q_id = self.add_question(art_id, question, answer)
         else:
             q_id = q_id[0][0]
 
@@ -113,14 +113,14 @@ class db():
 
             # in question table get question content and corresponding article id
             self.mycursor.execute(
-                "SELECT question_content, article_id FROM questions WHERE question_id={}".format(q_id))
-            q_content, a_id = self.mycursor.fetchall()[0]
+                "SELECT question_content, article_id, answer FROM questions WHERE question_id={}".format(q_id))
+            q_content, a_id, answer = self.mycursor.fetchall()[0]
 
             # in article table get article content and article title
             self.mycursor.execute(
-                "SELECT article_content, article_title FROM articles WHERE article_id={}".format(a_id))
-            a_content, a_title = self.mycursor.fetchall()[0]
-            history.append((a_title, a_content, q_content))
+                "SELECT article_content FROM articles WHERE article_id={}".format(a_id))
+            a_content = self.mycursor.fetchall()[0]
+            history.append((a_content, q_content, answer))
         return history
 
     def user_feedback(self, username, question, answer, satisfaction, expected=''):

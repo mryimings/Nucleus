@@ -86,10 +86,10 @@ def with_context():
         if request.method == 'POST':
             user_id = database.get_id_by_name(session['username'])
             keyword = str(datetime.now())
-            database.update(user_id,keyword,request.form['passage'],request.form['question'])
             question = request.form['question']
             passage = request.form['passage']
             answer = inference.response(context=passage, question=question)
+            database.update(user_id, keyword, request.form['passage'], request.form['question'],answer)
             return redirect(url_for('result', question=question, answer=answer))
         return render_template('with_context.html', username=session['username'])
     else:
@@ -110,7 +110,7 @@ def without_context():
                 return redirect(url_for('result_no_answer'))
             answer = inference.response(passage, question=request.form['question'])
             user_id = database.get_id_by_name(session['username'])
-            database.update(user_id,keyword,passage,request.form['question'])
+            database.update(user_id,keyword,passage,request.form['question'],answer)
             if not answer:
                 return redirect(url_for('result_no_answer'))
             return redirect(url_for('result', question=request.form['question'], answer=answer))

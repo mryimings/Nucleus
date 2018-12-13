@@ -87,7 +87,7 @@ class database_test_cases(unittest.TestCase):
         ori_row = count_rows(self.db.mycursor)
 
         # add a new test record into questions table
-        question_id = self.db.add_question(1, 'what do we love?')
+        question_id = self.db.add_question(1, 'what do we love?','Hooli')
 
         # assert the success of insertion
         self.db.mycursor.execute(self.sql_count_question)
@@ -109,9 +109,9 @@ class database_test_cases(unittest.TestCase):
         ori_row = count_rows(self.db.mycursor)
 
         # add a new test record into questions table
-        self.db.add_question(None, '')
-        self.db.add_question(1, '')
-        self.db.add_question(None, 's')
+        self.db.add_question(None, '','Hooli')
+        self.db.add_question(1, '','Hooli')
+        self.db.add_question(None, 's','Hooli')
 
         # assert the success of insertion
         self.db.mycursor.execute(self.sql_count_question)
@@ -124,8 +124,8 @@ class database_test_cases(unittest.TestCase):
         ori_row = count_rows(self.db.mycursor)
 
         # add a new test record into questions table
-        self.db.add_question('w', 'question')
-        self.db.add_question(-1, '')
+        self.db.add_question('w', 'question','a')
+        self.db.add_question(-1, '', 'a')
 
         # assert the success of insertion
         self.db.mycursor.execute(self.sql_count_question)
@@ -141,7 +141,7 @@ class database_test_cases(unittest.TestCase):
         s = ''
         for i in range(1000):
             s += 's'
-        self.db.add_question(1, s)
+        self.db.add_question(1, s,'Hooli')
 
         # assert the success of insertion
         self.db.mycursor.execute(self.sql_count_question)
@@ -239,7 +239,7 @@ class database_test_cases(unittest.TestCase):
         self.db.mycursor.execute(self.sql_count_history)
         ori_row_history = count_rows(self.db.mycursor)
 
-        flag_art, art_id, flag_q, q_id, h_id = self.db.update(1, 'Hooli', 'We are the team of Hooli', 'who are we?')
+        flag_art, art_id, flag_q, q_id, h_id = self.db.update(1, 'Hooli', 'We are the team of Hooli', 'who are we?','Hooli')
 
         self.db.mycursor.execute(self.sql_count_article)
         new_row_article = count_rows(self.db.mycursor)
@@ -288,10 +288,10 @@ class database_test_cases(unittest.TestCase):
         self.db.mycursor.execute(self.sql_count_history)
         ori_row_history = count_rows(self.db.mycursor)
 
-        self.db.update(None, 'Hooli', 'We are the team of Hooli', 'who are we?')
-        self.db.update(1, '', 'We are the team of Hooli', 'who are we?')
-        self.db.update(1, 'Hooli', '', 'who are we?')
-        self.db.update(1, 'Hooli', 'We are the team of Hooli', '')
+        self.db.update(None, 'Hooli', 'We are the team of Hooli', 'who are we?','Hooli')
+        self.db.update(1, '', 'We are the team of Hooli', 'who are we?','Hooli')
+        self.db.update(1, 'Hooli', '', 'who are we?','Hooli')
+        self.db.update(1, 'Hooli', 'We are the team of Hooli', '','Hooli')
 
 
         self.db.mycursor.execute(self.sql_count_article)
@@ -313,9 +313,9 @@ class database_test_cases(unittest.TestCase):
         self.db.mycursor.execute(self.sql_count_history)
         ori_row_history = count_rows(self.db.mycursor)
 
-        self.db.update(1, 1, 'We are the team of Hooli', 'who are we?')
-        self.db.update(1, 'Hooli', 2, 'who are we?')
-        self.db.update(1, 'Hooli', 'We are the team of Hooli', 3)
+        self.db.update(1, 1, 'We are the team of Hooli', 'who are we?','Hooli')
+        self.db.update(1, 'Hooli', 2, 'who are we?','Hooli')
+        self.db.update(1, 'Hooli', 'We are the team of Hooli', 3,'Hooli')
 
 
         self.db.mycursor.execute(self.sql_count_article)
@@ -339,8 +339,8 @@ class database_test_cases(unittest.TestCase):
         s = ''
         for i in range(100):
             s += 's'
-        self.db.update(1, s, 'We are the team of Hooli', 'who are we?')
-        self.db.update(1, 'Hooli', 'freugf', s)
+        self.db.update(1, s, 'We are the team of Hooli', 'who are we?','Hooli')
+        self.db.update(1, 'Hooli', 'freugf', s,'Hooli')
 
 
         self.db.mycursor.execute(self.sql_count_article)
