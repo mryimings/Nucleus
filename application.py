@@ -181,7 +181,7 @@ def feedback(question=None, answer=None):
 def thankyou():
     if 'username' not in session:
         return redirect(url_for('login'))
-    return render_template('', username=session['username'])
+    return render_template('thankyou.html', username=session['username'])
 
 def valid_login(username, password):
     cognito = Cognito(cognito_userpool_id, cognito_app_client_id, username=username)

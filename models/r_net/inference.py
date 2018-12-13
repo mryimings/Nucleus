@@ -10,7 +10,6 @@ d = dirname(dirname(dirname(abspath(__file__))))
 sys.path.append(d)
 from models.r_net.func import cudnn_gru, native_gru, dot_attention, summ, ptr_net
 from models.r_net.prepro import word_tokenize, convert_idx
-from os.path import dirname, abspath
 
 parent_dir = dirname(abspath(__file__))
 home_dir = dirname(dirname(dirname(abspath(__file__))))
