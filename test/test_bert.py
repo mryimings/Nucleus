@@ -15,6 +15,7 @@ class database_test_cases(unittest.TestCase):
                'context_list': ["Columbia University is in New York City.", "Stanford is in California.",
                                 "Tongji is in Shanghai."]}
         res = self.infe.response(qas)
+        print(res)
         self.assertTrue(len(res),9)
 
 
