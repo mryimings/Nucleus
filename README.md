@@ -39,9 +39,7 @@ database_pwd = <your_database_password>
 
 ### Find model
 
-Please contact us via email for the BERT model at `ys3031@columbia.edu`
-
-昊哥回头写一下模型放在哪里！
+Download the model via `https://1drv.ms/f/s!AtfKeiTxgnoqjt0M3lrLoowcsjbKcA`, name the whole dir as `model_data`, and put it to `<root>/models/bert`
 
 ### Launch Nucleus
 
