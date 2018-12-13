@@ -124,7 +124,7 @@ def result(question="", answer=""):
     if 'username' in session:
         print("Question", question)
         print("Answer", answer)
-        return render_template('result.html', username=session['username'], question=question, answer=answer)
+        return render_template('result_with_context.html', username=session['username'], question=question, answer=answer)
     else:
         return redirect(url_for('login'))
     

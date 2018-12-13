@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Connective Login Form a Responsive Widget Template :: w3layouts</title>
+<!-- meta_tags-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="connective login form a Flat Responsive Widget,Login form widgets, Sign up Web forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- Meta_tag_Keywords -->
+<link href="{{ url_for('static', filename='css/context_style.css')}}" rel="stylesheet" type="text/css" media="all"><!--style_sheet-->
+<link href="{{ url_for('static', filename='css/font-awesome.min.css')}}" rel="stylesheet" type="text/css" media="all"><!--font_awesome_icons-->
+<!--web_fonts-->
+<link href="//fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900&amp;subset=latin-ext" rel="stylesheet">
+<!--//web_fonts-->
+<style>
+.alert {
+    padding: 40px 180px;
+    background-color: #23272b;
+    color: white;
+}
+</style>
+</head>
+<body>
+<div class="form">
+<h1>Nucleus</h1>
+	<div class="form-content">
+		<form action="{{ url_for('result', question=question, answer=answer) }}" method="post">
+			<div class="form-info">
+				<h2><font size="4">Welcome, {{username}}!
+                </font></h2>
+			</div>
+
+            <div class="form-content">
+                <!--<div class="email-w3l">-->
+                    <!--<li><p><font color="#a9a9a9" size="6">Question: {{ question }}</font></p></li>-->
+                <!--</div>-->
+                <!--<div class="email-w3l">-->
+                    <!--<li><p><font color="#a9a9a9" size="6">Answer: {{ answer }}</font></p></li>-->
+                <!--</div>-->
+                <div>
+                    <p><strong><font color="#a9a9a9" size="8">Question: {{ question }}</font></strong></p>
+                </div>
+
+                <!--<br />-->
+                <!--<div class="alert">-->
+                    <!--<strong>Answer: {{ answer }}</strong>-->
+                <!--</div>-->
+            </div>
+            <div class="form-content">
+                <div class="alert">
+                    <strong><font size="8">Answer: {{ answer }}</font></strong>
+                </div>
+            </div>
+
+            <!--<div class="form-content">-->
+                <!--<div class="alert">-->
+  				    <!--<strong>Answer: {{ answer }}</strong>-->
+			    <!--</div>-->
+            <!--</div>-->
+
+            <!--<div class="form-content">-->
+                <!--<textarea class="email-w3l" type="text" cols="120" rows="12" name="question" required="">Answer: {{ answer }}</textarea>-->
+            <!--</div>-->
+            <!--<div class="submit-agileits">-->
+                <!--<center><input class="login" align="middle" type="submit" value="submit"></center>-->
+			<!--</div>-->
+
+            <div class="submit-agileits">
+                <center><a href="{{ url_for('feedback', question=question, answer=answer) }}" class="button"><font color="#898989" size="4">Submit feedback and help us improve Nucleus</font></a></center>
+			</div>
+
+
+			<div class="form-check">
+				<div class="left">
+					<!--<input type="checkbox" value="Remember me">Remember me-->
+					<a href="{{ url_for('logout') }}"><font color="white">Logout</font></a>
+				</div>
+				<div class="right" align="right">
+                    <a href="{{ url_for('welcome') }}"><font color="white">Back</font></a>
+				</div>
+				<div class="clear"></div>
+			</div>
+
+		</form>
+	</div>
+</div>
+<!---728x90--->
+<!--<footer>&copy; 2018 Connective login form. All rights reserved | Design by <a href="#">W3layouts</a></footer>-->
+<!---728x90--->
+</body>
+</html>
