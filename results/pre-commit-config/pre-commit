@@ -31,7 +31,6 @@ class FatalError(RuntimeError):
 
 def _norm_exe(exe):
     """Necessary for shebang support on windows.
-
     roughly lifted from `identify.identify.parse_shebang`
     """
     with open(exe, 'rb') as f:
@@ -167,6 +166,8 @@ def main():
     os.system("python test/test_inference.py")
     os.system('echo "test database"')
     os.system("python test/test_database.py")
+    os.system('echo "test bert"')
+    os.system("python test/test_bert.py")
     try:
         _validate_config()
         return retv | subprocess.call(_exe() + _opts(stdin))
