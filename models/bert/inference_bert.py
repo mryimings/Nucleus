@@ -3,6 +3,11 @@ from __future__ import division
 from __future__ import print_function
 
 import collections
+import sys
+from os.path import dirname, abspath
+d = dirname(dirname(dirname(abspath(__file__))))
+sys.path.append(d)
+cur = dirname(abspath(__file__))
 from models.bert import modeling
 from models.bert import optimization
 from models.bert import tokenization
@@ -763,15 +768,15 @@ def write_predictions(all_examples, all_features, all_results, n_best_size, max_
 class Inference(object):
 
     def __init__(self):
-        self.output_dir = 'model_data'
-        self.ckpt = 'model_data/model.ckpt-10859'
+        self.output_dir = cur + '/model_data'
+        self.ckpt = cur + '/model_data/model.ckpt-10859'
         #tf.logging.set_verbosity(tf.logging.INFO)
         self.RawResult = collections.namedtuple("RawResult", ["unique_id", "start_logits", "end_logits"])
 
-        self.bert_config = modeling.BertConfig.from_json_file('model_data/bert_config.json')
+        self.bert_config = modeling.BertConfig.from_json_file(cur+'/model_data/bert_config.json')
         #validate_flags_or_throw(bert_config)
         #tf.gfile.MakeDirs()
-        self.tokenizer = tokenization.FullTokenizer(vocab_file='model_data/vocab.txt', do_lower_case=True)
+        self.tokenizer = tokenization.FullTokenizer(vocab_file=cur+'/model_data/vocab.txt', do_lower_case=True)
         tpu_cluster_resolver = None
         is_per_host = tf.contrib.tpu.InputPipelineConfig.PER_HOST_V2
         run_config = tf.contrib.tpu.RunConfig(cluster=tpu_cluster_resolver, master=None,

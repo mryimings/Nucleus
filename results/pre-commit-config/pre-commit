@@ -163,9 +163,11 @@ def main():
     # os.system("pylint models/r_net/inference.py")
     # os.system("python models/r_net/inference.py")
     os.system('echo "test inference"')
-    os.system("python test/test_inference.py")
+    #os.system("python test/test_inference.py")
     os.system('echo "test database"')
-    os.system("python test/test_database.py")
+    #os.system("python test/test_database.py")
+    os.system('echo "test bert"')
+    os.system("python test/test_bert.py")
     try:
         _validate_config()
         return retv | subprocess.call(_exe() + _opts(stdin))
