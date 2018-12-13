@@ -34,7 +34,7 @@ cognito_app_client_id = <your_config_id>
 database_user_name = <your_database_username>
 database_endpoint = <your_database_endpoint>
 port = <your_endpoint_number>
-database_pwd = <your_database_password>.
+database_pwd = <your_database_password>
 ```
 
 ### Find model
