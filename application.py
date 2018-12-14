@@ -13,7 +13,7 @@ inference = Inference()
 app = Flask(__name__)
 database = Database()
 KEYWORD_TOP_K = 5
-MIN_ANSWER_SCORE = 3
+MIN_ANSWER_SCORE = 0
 keyword_topk = 5
 
 @app.route('/login', methods=['GET', 'POST'])
