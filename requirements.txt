@@ -9,3 +9,4 @@ wikipedia
 nltk
 rake-nltk
 mysql-connector-python
+pytest

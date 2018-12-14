@@ -13,7 +13,12 @@ from models.bert import optimization
 from models.bert import tokenization
 import six
 import tensorflow as tf
+import sys
 import os
+from os.path import dirname, abspath
+d = dirname(dirname(dirname(abspath(__file__))))
+sys.path.append(d)
+cur = dirname(abspath(__file__))
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 tf.logging.set_verbosity(tf.logging.ERROR)
 
@@ -750,6 +755,8 @@ def write_predictions(all_examples, all_features, all_results, n_best_size, max_
             all_predictions[example.qas_id] = nbest_json[0]["text"]
         else:
             # predict "" iff the null score - the score of best non-null > threshold
+            if not best_non_null_entry:
+                return []
             score_diff = score_null - best_non_null_entry.start_logit - (best_non_null_entry.end_logit)
             scores_diff_json[example.qas_id] = score_diff
             if score_diff > -6.496073246002197:
@@ -760,23 +767,27 @@ def write_predictions(all_examples, all_features, all_results, n_best_size, max_
         all_nbest_json[example.qas_id] = nbest_json
 
     res = []
+    print("new printing all_nbest_json 2101")
+    print(all_nbest_json)
     for key in all_nbest_json:
-        for k in range(n_best_size):
+        for k in range(min(n_best_size, len(all_nbest_json[key]))):
             res.append((all_nbest_json[key][k]["text"],all_nbest_json[key][k]["scores"]))
     return res
 
 class Inference(object):
 
     def __init__(self):
-        self.output_dir = cur + '/model_data'
-        self.ckpt = cur + '/model_data/model.ckpt-10859'
+
+        self.output_dir = cur +'/' +'model_data'
+        self.ckpt = cur + '/' + 'model_data/model.ckpt-10859'
         #tf.logging.set_verbosity(tf.logging.INFO)
         self.RawResult = collections.namedtuple("RawResult", ["unique_id", "start_logits", "end_logits"])
 
-        self.bert_config = modeling.BertConfig.from_json_file(cur+'/model_data/bert_config.json')
+        self.bert_config = modeling.BertConfig.from_json_file( cur + '/' + 'model_data/bert_config.json')
         #validate_flags_or_throw(bert_config)
         #tf.gfile.MakeDirs()
-        self.tokenizer = tokenization.FullTokenizer(vocab_file=cur+'/model_data/vocab.txt', do_lower_case=True)
+        self.tokenizer = tokenization.FullTokenizer(vocab_file=cur+'/'+'model_data/vocab.txt', do_lower_case=True)
+
         tpu_cluster_resolver = None
         is_per_host = tf.contrib.tpu.InputPipelineConfig.PER_HOST_V2
         run_config = tf.contrib.tpu.RunConfig(cluster=tpu_cluster_resolver, master=None,

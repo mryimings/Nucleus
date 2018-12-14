@@ -3,7 +3,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from warrant import Cognito
 from config import cognito_userpool_id, cognito_app_client_id
-from models.r_net.inference import Inference
+from models.bert.inference_bert import Inference
 import wikipedia
 from rake_nltk import Rake
 from database.db_update_class import db
@@ -14,6 +14,9 @@ inference = Inference()
 
 app = Flask(__name__)
 database = db()
+KEYWORD_TOP_K = 5
+MIN_ANSWER_SCORE = 3
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -80,40 +83,101 @@ def welcome():
     else:
         return redirect(url_for('login'))
 
+
 @app.route('/with_context', methods=['GET', 'POST'])
 def with_context():
     if 'username' in session:
         if request.method == 'POST':
-            user_id = database.get_id_by_name(session['username'])
-            keyword = str(datetime.now())
+            
             question = request.form['question']
-            passage = request.form['passage']
-            answer = inference.response(context=passage, question=question)
-            database.update(user_id, keyword, request.form['passage'], request.form['question'],answer)
+            context = request.form['passage']
+            qas = {
+                'question': question,
+                'context_list': [context]
+            }
+            
+            print(qas)
+            
+            results = inference.response(qas=qas)
+            if not results:
+                return redirect(url_for('result_no_answer'))
+            
+            answer, score = results[0]
+            
+            if not answer or score < MIN_ANSWER_SCORE:
+                return redirect(url_for('result_no_answer'))
+            
+            user_id = database.get_id_by_name(session['username'])
+            database.update(user_id, str(datetime.now()), request.form['passage'], request.form['question'],answer)
+            
             return redirect(url_for('result', question=question, answer=answer))
         return render_template('with_context.html', username=session['username'])
     else:
         return redirect(url_for('login'))
 
+
 @app.route('/without_context', methods=['GET', 'POST'])
 def without_context():
     if 'username' in session:
         if request.method == 'POST':
+            
+            question = request.form['question']
+            if not question.endswith('?'):
+                question += '?'
+            
             rake = Rake()
-            rake.extract_keywords_from_text(request.form['question'])
-            keywords = rake.get_ranked_phrases()
-            keyword = keywords[0]
-            try:
-                passage = wikipedia.page(keyword).summary
-            except PageError as e:
-                print(e)
+            rake.extract_keywords_from_text(question)
+            keywords = rake.get_ranked_phrases()[:5]
+
+            context_list = []
+            for keyword in keywords:
+                try:
+                    context = wikipedia.page(keyword).summary
+                except PageError as e:
+                    print(e)
+                    continue
+                context_list += get_context_list(context=context)
+            
+            if not context_list:
                 return redirect(url_for('result_no_answer'))
-            answer = inference.response(passage, question=request.form['question'])
+                
+            print("************** begin printing context list *******************")
+            for context in context_list:
+                print(context)
+            
+            qas = {
+                'question': question,
+                'context_list': context_list
+            }
+            
+            print(qas)
+            
+            results = inference.response(qas=qas)
+            
+            final_answer = ""
+            max_score = float("-inf")
+            final_context = ""
+            
+            print("************* begin printing result *******************")
+            for i, result in enumerate(results):
+                answer, score = result
+                print(i)
+                print(score)
+                print(answer)
+                print("********************************************************")
+                
+                if score > max_score and answer:
+                    final_answer = answer
+                    max_score = score
+                    final_context = context_list[i // 3]
+            
+            if not final_answer or max_score < MIN_ANSWER_SCORE:
+                return redirect(url_for('result_no_answer'))
+
             user_id = database.get_id_by_name(session['username'])
-            database.update(user_id,keyword,passage,request.form['question'],answer)
-            if not answer:
-                return redirect(url_for('result_no_answer'))
-            return redirect(url_for('result', question=request.form['question'], answer=answer))
+            database.update(user_id, str(datetime.now()), final_context, request.form['question'], final_answer)
+            
+            return redirect(url_for('result', question=request.form['question'], answer=final_answer))
         else:
             return render_template('without_context.html', username=session['username'])
     else:
@@ -160,6 +224,7 @@ def feedback(question=None, answer=None):
     else:
         return render_template('feedback.html', username=session['username'], question=question, answer=answer)
     
+    
 @app.route('/thankyou', methods=['GET'])
 def thankyou():
     if 'username' not in session:
@@ -175,14 +240,16 @@ def valid_login(username, password):
         return False
     return True
 
+
 def get_context_list(context, min_len=700):
     context_list = []
     assert context
     p1, p2 = 0, 0
     while p2 < len(context):
         p2 += min_len
-        while p2 < len(context) and p2 != '.':
+        while p2 < len(context) and context[p2] != '.':
             p2 += 1
+        p2 += 1
         context_list.append(context[p1:p2])
         p1 = p2
     return context_list
