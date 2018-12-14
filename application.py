@@ -184,6 +184,8 @@ def result_no_answer():
 def history():
     if 'username' in session:
         requested_history = database.get_history_list(name=session['username'], limit=5)
+        if requested_history == -1:
+            requested_history = [("This will not be shown", "You do not have any question history now", "Go to ask Nucleus something!")]
         return render_template('history.html', username=session['username'], requested_history=requested_history)
     else:
         return redirect(url_for('login'))
