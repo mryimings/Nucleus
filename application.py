@@ -99,6 +99,9 @@ def with_context():
             print(qas)
             
             results = inference.response(qas=qas)
+            if not results:
+                return redirect(url_for('result_no_answer'))
+            
             answer, score = results[0]
             
             if not answer or score < MIN_ANSWER_SCORE:
