@@ -768,18 +768,14 @@ def write_predictions(all_examples, all_features, all_results, n_best_size, max_
     print("new printing all_nbest_json 2101")
     print(all_nbest_json)
     for key in all_nbest_json:
-<<<<<<< HEAD
         for k in range(min(n_best_size, len(all_nbest_json[key]))):
-=======
-        for k in range(min(n_best_size,len(all_nbest_json[key]))):
->>>>>>> master
             res.append((all_nbest_json[key][k]["text"],all_nbest_json[key][k]["scores"]))
     return res
 
 class Inference(object):
 
     def __init__(self):
-<<<<<<< HEAD
+
         self.output_dir = cur +'/' +'model_data'
         self.ckpt = cur + '/' + 'model_data/model.ckpt-10859'
         #tf.logging.set_verbosity(tf.logging.INFO)
@@ -789,17 +785,7 @@ class Inference(object):
         #validate_flags_or_throw(bert_config)
         #tf.gfile.MakeDirs()
         self.tokenizer = tokenization.FullTokenizer(vocab_file=cur+'/'+'model_data/vocab.txt', do_lower_case=True)
-=======
-        self.output_dir = cur + '/model_data'
-        self.ckpt = cur + '/model_data/model.ckpt-10859'
-        #tf.logging.set_verbosity(tf.logging.INFO)
-        self.RawResult = collections.namedtuple("RawResult", ["unique_id", "start_logits", "end_logits"])
 
-        self.bert_config = modeling.BertConfig.from_json_file(cur+'/model_data/bert_config.json')
-        #validate_flags_or_throw(bert_config)
-        #tf.gfile.MakeDirs()
-        self.tokenizer = tokenization.FullTokenizer(vocab_file=cur+'/model_data/vocab.txt', do_lower_case=True)
->>>>>>> master
         tpu_cluster_resolver = None
         is_per_host = tf.contrib.tpu.InputPipelineConfig.PER_HOST_V2
         run_config = tf.contrib.tpu.RunConfig(cluster=tpu_cluster_resolver, master=None,

@@ -15,7 +15,7 @@ inference = Inference()
 app = Flask(__name__)
 database = db()
 KEYWORD_TOP_K = 5
-MIN_ANSWER_SCORE = 5
+MIN_ANSWER_SCORE = 3
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -115,7 +115,11 @@ def with_context():
 def without_context():
     if 'username' in session:
         if request.method == 'POST':
+            
             question = request.form['question']
+            if not question.endswith('?'):
+                question += '?'
+            
             rake = Rake()
             rake.extract_keywords_from_text(question)
             keywords = rake.get_ranked_phrases()[:5]
@@ -128,16 +132,20 @@ def without_context():
                     print(e)
                     continue
                 context_list += get_context_list(context=context)
-                
+            
+            if not context_list:
+                return redirect(url_for('result_no_answer'))
                 
             print("************** begin printing context list *******************")
             for context in context_list:
                 print(context)
-                
+            
             qas = {
                 'question': question,
                 'context_list': context_list
             }
+            
+            print(qas)
             
             results = inference.response(qas=qas)
             
@@ -145,13 +153,13 @@ def without_context():
             max_score = float("-inf")
             final_context = ""
             
-            # print("************* begin printing result *******************")
+            print("************* begin printing result *******************")
             for i, result in enumerate(results):
                 answer, score = result
-                # print(i)
-                # print(score)
-                # print(answer)
-                # print("********************************************************")
+                print(i)
+                print(score)
+                print(answer)
+                print("********************************************************")
                 
                 if score > max_score and answer:
                     final_answer = answer
