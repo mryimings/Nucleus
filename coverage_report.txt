@@ -1,10 +1,15 @@
-Name                          Stmts   Miss  Cover
--------------------------------------------------
-config.py                         6      0   100%
-database/db_update_class.py      90     33    63%
-models/r_net/func.py            153     42    73%
-models/r_net/inference.py       184      5    97%
-models/r_net/prepro.py          187    161    14%
-test/test_database.py           235      5    98%
--------------------------------------------------
-TOTAL                           855    246    71%
+Name                            Stmts   Miss  Cover
+---------------------------------------------------
+config.py                           6      0   100%
+database/db_update_class.py       103     35    66%
+models/bert/inference_bert.py     518    114    78%
+models/bert/modeling.py           301     39    87%
+models/bert/optimization.py        68     56    18%
+models/bert/tokenization.py       202     42    79%
+models/r_net/func.py              153     42    73%
+models/r_net/inference.py         183      5    97%
+models/r_net/prepro.py            187    161    14%
+test/test_bert.py                  16      0   100%
+test/test_database.py             248      5    98%
+---------------------------------------------------
+TOTAL                            1985    499    75%
