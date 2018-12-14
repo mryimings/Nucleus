@@ -18,8 +18,6 @@ KEYWORD_TOP_K = 5
 MIN_ANSWER_SCORE = 5
 
 
-CONTEXT_RELATED_THRESHOLD = 5.0
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
@@ -101,7 +99,7 @@ def with_context():
             results = inference.response(qas=qas)
             answer, score = results[0]
             
-            if not answer or score < CONTEXT_RELATED_THRESHOLD:
+            if not answer or score < MIN_ANSWER_SCORE:
                 return redirect(url_for('result_no_answer'))
             
             user_id = database.get_id_by_name(session['username'])
@@ -164,7 +162,7 @@ def without_context():
                 return redirect(url_for('result_no_answer'))
 
             user_id = database.get_id_by_name(session['username'])
-            database.update(user_id, keyword, final_context, request.form['question'], final_answer)
+            database.update(user_id, str(datetime.now()), final_context, request.form['question'], final_answer)
             
             return redirect(url_for('result', question=request.form['question'], answer=final_answer))
         else:
