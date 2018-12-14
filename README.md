@@ -41,6 +41,8 @@ database_pwd = <your_database_password>
 
 Download the model via `https://1drv.ms/f/s!AtfKeiTxgnoqjt0M3lrLoowcsjbKcA`, name the whole dir as `model_data`, and put it to `<root>/models/bert`
 
+If you cannot download the model, please contact us at `ys3031@columbia.edu`
+
 ### Test cases
 
 To run the test cases, direct into ./test folder, run the three files respectively to test bert mode and database methods.
