@@ -14,6 +14,9 @@ inference = Inference()
 
 app = Flask(__name__)
 database = db()
+KEYWORD_TOP_K = 5
+MIN_ANSWER_SCORE = 3
+
 
 keyword_topk = 5
 
@@ -82,10 +85,12 @@ def welcome():
     else:
         return redirect(url_for('login'))
 
+
 @app.route('/with_context', methods=['GET', 'POST'])
 def with_context():
     if 'username' in session:
         if request.method == 'POST':
+<<<<<<< HEAD
             user_id = database.get_id_by_name(session['username'])
             database.update(user_id,str(datetime.now()),request.form['passage'],request.form['question'])
             
@@ -94,17 +99,47 @@ def with_context():
             result = inference.response(qas={"question": question,
                                              "context_list": [passage]})
             answer, _ = result[0][0], result[0][1]
+=======
+            
+            question = request.form['question']
+            context = request.form['passage']
+            qas = {
+                'question': question,
+                'context_list': [context]
+            }
+            
+            print(qas)
+            
+            results = inference.response(qas=qas)
+            if not results:
+                return redirect(url_for('result_no_answer'))
+            
+            answer, score = results[0]
+            
+            if not answer or score < MIN_ANSWER_SCORE:
+                return redirect(url_for('result_no_answer'))
+            
+            user_id = database.get_id_by_name(session['username'])
+            database.update(user_id, str(datetime.now()), request.form['passage'], request.form['question'],answer)
+>>>>>>> master
             
             return redirect(url_for('result', question=question, answer=answer))
         return render_template('with_context.html', username=session['username'])
     else:
         return redirect(url_for('login'))
 
+
 @app.route('/without_context', methods=['GET', 'POST'])
 def without_context():
     if 'username' in session:
         if request.method == 'POST':
+            
+            question = request.form['question']
+            if not question.endswith('?'):
+                question += '?'
+            
             rake = Rake()
+<<<<<<< HEAD
             rake.extract_keywords_from_text(request.form['question'])
             keywords = rake.get_ranked_phrases()[:keyword_topk]
             context_list = []
@@ -153,6 +188,60 @@ def without_context():
             
             return redirect(url_for('result', question=request.form['question'], answer=final_answer))
         
+=======
+            rake.extract_keywords_from_text(question)
+            keywords = rake.get_ranked_phrases()[:5]
+
+            context_list = []
+            for keyword in keywords:
+                try:
+                    context = wikipedia.page(keyword).summary
+                except PageError as e:
+                    print(e)
+                    continue
+                context_list += get_context_list(context=context)
+            
+            if not context_list:
+                return redirect(url_for('result_no_answer'))
+                
+            print("************** begin printing context list *******************")
+            for context in context_list:
+                print(context)
+            
+            qas = {
+                'question': question,
+                'context_list': context_list
+            }
+            
+            print(qas)
+            
+            results = inference.response(qas=qas)
+            
+            final_answer = ""
+            max_score = float("-inf")
+            final_context = ""
+            
+            print("************* begin printing result *******************")
+            for i, result in enumerate(results):
+                answer, score = result
+                print(i)
+                print(score)
+                print(answer)
+                print("********************************************************")
+                
+                if score > max_score and answer:
+                    final_answer = answer
+                    max_score = score
+                    final_context = context_list[i // 3]
+            
+            if not final_answer or max_score < MIN_ANSWER_SCORE:
+                return redirect(url_for('result_no_answer'))
+
+            user_id = database.get_id_by_name(session['username'])
+            database.update(user_id, str(datetime.now()), final_context, request.form['question'], final_answer)
+            
+            return redirect(url_for('result', question=request.form['question'], answer=final_answer))
+>>>>>>> master
         else:
             return render_template('without_context.html', username=session['username'])
     else:
@@ -200,6 +289,7 @@ def feedback(question=None, answer=None):
     else:
         return render_template('feedback.html', username=session['username'], question=question, answer=answer)
     
+    
 @app.route('/thankyou', methods=['GET'])
 def thankyou():
     if 'username' not in session:
@@ -214,6 +304,7 @@ def valid_login(username, password):
         print(e)
         return False
     return True
+
 
 def get_context_list(context, min_len=700):
     context_list = []

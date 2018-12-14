@@ -34,14 +34,16 @@ cognito_app_client_id = <your_config_id>
 database_user_name = <your_database_username>
 database_endpoint = <your_database_endpoint>
 port = <your_endpoint_number>
-database_pwd = <your_database_password>.
+database_pwd = <your_database_password>
 ```
 
 ### Find model
 
-Please contact us via email for the BERT model at `ys3031@columbia.edu`
+Download the model via `https://1drv.ms/f/s!AtfKeiTxgnoqjt0M3lrLoowcsjbKcA`, name the whole dir as `model_data`, and put it to `<root>/models/bert`
 
-昊哥回头写一下模型放在哪里！
+### Test cases
+
+To run the test cases, direct into ./test folder, run the three files respectively to test bert mode and database methods.
 
 ### Launch Nucleus
 
