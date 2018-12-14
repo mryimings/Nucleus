@@ -1,3 +1,4 @@
+@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
 /*--
     Author: W3layouts
     Author URL: http://w3layouts.com
@@ -27,6 +28,7 @@
 	nav.horizontal ul li{display: inline-block;}
 	img{max-width:100%;}
 /*-- Reset Code --*/
+
 
 body {
      background:url("../images/login-img.jpg");
@@ -59,6 +61,7 @@ h1 {
 	justify-content: center;
 	box-sizing: border-box;
 }
+
  form {
 	background-color:rgba(0, 0, 0, 0.75);
 	padding: 10px 10px;

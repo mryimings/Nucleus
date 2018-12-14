@@ -142,7 +142,9 @@ def history():
 
         # num = request.form['num']
         requested_history = database.get_history_list(name=session['username'], limit=5)
-        return render_template('history.html', username=session['username'], hist=requested_history)
+        print(requested_history)
+        return render_template('history.html', username=session['username'], requested_history=requested_history)
+
     else:
         return redirect(url_for('login'))
     
