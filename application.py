@@ -4,14 +4,14 @@ from config import cognito_userpool_id, cognito_app_client_id
 from models.bert.inference_bert import Inference
 import wikipedia
 from rake_nltk import Rake
-from database.db_update_class import db
+from database.Database import Database
 from datetime import datetime
 from wikipedia.exceptions import PageError
 
 inference = Inference()
 
 app = Flask(__name__)
-database = db()
+database = Database()
 KEYWORD_TOP_K = 5
 MIN_ANSWER_SCORE = 3
 keyword_topk = 5

@@ -4,7 +4,7 @@ from os.path import dirname, abspath
 
 d = dirname(dirname(abspath(__file__)))
 sys.path.append(d)
-from database.db_update_class import db
+from database.Database import Database
 
 
 def count_rows(cursor):
@@ -15,7 +15,7 @@ def count_rows(cursor):
 # the test cases for database
 class database_test_cases(unittest.TestCase):
     def setUp(self):
-        self.db = db()
+        self.db = Database()
         self.sql_count_article = 'SELECT count(article_id) FROM HooliASE.articles'
         self.sql_count_question = 'SELECT count(question_id) FROM HooliASE.questions'
         self.sql_count_history = 'SELECT count(history_id) FROM HooliASE.history'
