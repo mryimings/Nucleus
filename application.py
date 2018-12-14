@@ -16,8 +16,6 @@ app = Flask(__name__)
 database = db()
 KEYWORD_TOP_K = 5
 MIN_ANSWER_SCORE = 3
-
-
 keyword_topk = 5
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -36,7 +34,6 @@ def login():
 def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
-
 
 @app.route('/signup', methods=['GET', "POST"])
 def signup():
@@ -58,7 +55,6 @@ def signup():
             return redirect(url_for('verification'))
     return render_template('signup.html', error=error)
 
-
 @app.route('/verification', methods=['GET', 'POST'])
 def verification():
     if 'username' in session:
@@ -77,14 +73,12 @@ def verification():
     else:
         return redirect(url_for('login'))
 
-
 @app.route('/', methods=['GET', 'POST'])
 def welcome():
     if 'username' in session:
         return render_template('welcome.html', username=session['username'])
     else:
         return redirect(url_for('login'))
-
 
 @app.route('/with_context', methods=['GET', 'POST'])
 def with_context():
@@ -117,7 +111,6 @@ def with_context():
         return render_template('with_context.html', username=session['username'])
     else:
         return redirect(url_for('login'))
-
 
 @app.route('/without_context', methods=['GET', 'POST'])
 def without_context():
@@ -197,7 +190,6 @@ def history():
     else:
         return redirect(url_for('login'))
     
-    
 @app.route('/feedback/<question>/<answer>', methods=['GET', 'POST'])
 def feedback(question=None, answer=None):
     if 'username' not in session:
@@ -208,7 +200,6 @@ def feedback(question=None, answer=None):
         return redirect(url_for("thankyou", username=session['username']))
     else:
         return render_template('feedback.html', username=session['username'], question=question, answer=answer)
-    
     
 @app.route('/thankyou', methods=['GET'])
 def thankyou():
@@ -224,7 +215,6 @@ def valid_login(username, password):
         print(e)
         return False
     return True
-
 
 def get_context_list(context, min_len=700):
     context_list = []
