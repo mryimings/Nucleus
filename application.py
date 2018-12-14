@@ -90,16 +90,6 @@ def welcome():
 def with_context():
     if 'username' in session:
         if request.method == 'POST':
-<<<<<<< HEAD
-            user_id = database.get_id_by_name(session['username'])
-            database.update(user_id,str(datetime.now()),request.form['passage'],request.form['question'])
-            
-            question = request.form['question']
-            passage = request.form['passage']
-            result = inference.response(qas={"question": question,
-                                             "context_list": [passage]})
-            answer, _ = result[0][0], result[0][1]
-=======
             
             question = request.form['question']
             context = request.form['passage']
@@ -121,7 +111,6 @@ def with_context():
             
             user_id = database.get_id_by_name(session['username'])
             database.update(user_id, str(datetime.now()), request.form['passage'], request.form['question'],answer)
->>>>>>> master
             
             return redirect(url_for('result', question=question, answer=answer))
         return render_template('with_context.html', username=session['username'])
@@ -139,56 +128,6 @@ def without_context():
                 question += '?'
             
             rake = Rake()
-<<<<<<< HEAD
-            rake.extract_keywords_from_text(request.form['question'])
-            keywords = rake.get_ranked_phrases()[:keyword_topk]
-            context_list = []
-            for keyword in keywords:
-                try:
-                    passage = wikipedia.page(keyword).summary
-                except PageError as e:
-                    print("page not fund")
-                    print(e)
-                    continue
-                context_list += get_context_list(passage)
-            
-            
-            if not context_list:
-                return redirect(url_for('result_no_answer'))
-            
-            feed_dict = {"question": request.form["question"], "context_list": context_list}
-            results = inference.response(qas=feed_dict)
-            final_answer = ""
-            max_score = float("-inf")
-            final_passage = ""
-            for i, result in enumerate(results):
-                answer, score = result
-                if score > max_score:
-                    max_score = score
-                    final_answer = answer
-                    final_passage = context_list[(i//3)]
-            
-            
-            if not final_answer:
-                return redirect(url_for('result_no_answer'))
-            
-            print("******************** Begins Logging **************************")
-            
-            for i, context in enumerate(context_list):
-                print("context {}".format(str(i)))
-                print(context)
-            
-            for i, result in enumerate(results):
-                print('result {} for context {}'.format(str(i), str(i//3)))
-                print("score {}".format(str(result[1])))
-                print("answer {}".format(str(result[0])))
-                
-            user_id = database.get_id_by_name(session['username'])
-            database.update(user_id, str(datetime.now()), final_passage, request.form['question'])
-            
-            return redirect(url_for('result', question=request.form['question'], answer=final_answer))
-        
-=======
             rake.extract_keywords_from_text(question)
             keywords = rake.get_ranked_phrases()[:5]
 
@@ -241,7 +180,6 @@ def without_context():
             database.update(user_id, str(datetime.now()), final_context, request.form['question'], final_answer)
             
             return redirect(url_for('result', question=request.form['question'], answer=final_answer))
->>>>>>> master
         else:
             return render_template('without_context.html', username=session['username'])
     else:
