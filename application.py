@@ -16,6 +16,8 @@ app = Flask(__name__)
 database = db()
 keyword_topk = 5
 
+CONTEXT_RELATED_THRESHOLD = 5.0
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
@@ -86,14 +88,22 @@ def welcome():
 def with_context():
     if 'username' in session:
         if request.method == 'POST':
-            user_id = database.get_id_by_name(session['username'])
-            database.update(user_id, str(datetime.now()), request.form['passage'], request.form['question'])
             
             question = request.form['question']
-            passage = request.form['passage']
-            result = inference.response(qas={"question": question,
-                                             "context_list": [passage]})
-            answer, _ = result[0][0], result[0][1]
+            context = request.form['passage']
+            qas = {
+                'question': question,
+                'context_list': [context]
+            }
+            
+            results = inference.response(qas=qas)
+            answer, score = results[0]
+            
+            if not answer or score < CONTEXT_RELATED_THRESHOLD:
+                return redirect(url_for('result_no_answer'))
+            
+            user_id = database.get_id_by_name(session['username'])
+            database.update(user_id, str(datetime.now()), request.form['passage'], request.form['question'],answer)
             
             return redirect(url_for('result', question=question, answer=answer))
         return render_template('with_context.html', username=session['username'])
@@ -105,53 +115,55 @@ def with_context():
 def without_context():
     if 'username' in session:
         if request.method == 'POST':
+            question = request.form['question']
             rake = Rake()
-            rake.extract_keywords_from_text(request.form['question'])
-            keywords = rake.get_ranked_phrases()[:keyword_topk]
+            rake.extract_keywords_from_text(question)
+            keywords = rake.get_ranked_phrases()[:5]
+
             context_list = []
             for keyword in keywords:
                 try:
-                    passage = wikipedia.page(keyword).summary
+                    context = wikipedia.page(keyword).summary
                 except PageError as e:
-                    print("page not fund")
                     print(e)
                     continue
-                context_list += get_context_list(passage)
+                context_list += get_context_list(context=context)
+                
+                
+            print("************** begin printing context list *******************")
+            for context in context_list:
+                print(context)
+                
+            qas = {
+                'question': question,
+                'context_list': context_list
+            }
             
-            if not context_list:
-                return redirect(url_for('result_no_answer'))
+            results = inference.response(qas=qas)
             
-            feed_dict = {"question": request.form["question"], "context_list": context_list}
-            results = inference.response(qas=feed_dict)
             final_answer = ""
             max_score = float("-inf")
-            final_passage = ""
+            final_context = ""
+            
+            print("************* begin printing result *******************")
             for i, result in enumerate(results):
                 answer, score = result
+                print(i)
+                print(score)
+                print(answer)
+                print("********************************************************")
                 if score > max_score:
-                    max_score = score
                     final_answer = answer
-                    final_passage = context_list[(i // 3)]
+                    max_score = score
+                    final_context = context_list[i // 3]
             
             if not final_answer:
                 return redirect(url_for('result_no_answer'))
-            
-            print("******************** Begins Logging **************************")
-            
-            for i, context in enumerate(context_list):
-                print("context {}".format(str(i)))
-                print(context)
-            
-            for i, result in enumerate(results):
-                print('result {} for context {}'.format(str(i), str(i // 3)))
-                print("score {}".format(str(result[1])))
-                print("answer {}".format(str(result[0])))
-            
+
             user_id = database.get_id_by_name(session['username'])
-            database.update(user_id, str(datetime.now()), final_passage, request.form['question'])
+            database.update(user_id, keyword, final_context, request.form['question'], final_answer)
             
             return redirect(url_for('result', question=request.form['question'], answer=final_answer))
-        
         else:
             return render_template('without_context.html', username=session['username'])
     else:
@@ -214,6 +226,7 @@ def valid_login(username, password):
         print(e)
         return False
     return True
+
 
 def get_context_list(context, min_len=700):
     context_list = []

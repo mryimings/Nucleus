@@ -10,7 +10,6 @@ d = dirname(dirname(dirname(abspath(__file__))))
 sys.path.append(d)
 from models.r_net.func import cudnn_gru, native_gru, dot_attention, summ, ptr_net
 from models.r_net.prepro import word_tokenize, convert_idx
-from os.path import dirname, abspath
 
 parent_dir = dirname(abspath(__file__))
 home_dir = dirname(dirname(dirname(abspath(__file__))))
@@ -194,7 +193,7 @@ class Inference(object):
 # Demo, example from paper "SQuAD: 100,000+ Questions for Machine Comprehension of Text"
 flags = tf.flags
 flags.DEFINE_string('context',
-                    'The New York City, the City That Never Sleeps—New York is a city of superlatives: Americas biggest; its most exciting; its business and cultural capitals; the nations trendsetter. The city seems to pull in the best and the brightest from every corner of the country. The citys ethnic flavor has been nuanced by decades of immigrants whose first glimpse of America was the Statue of Liberty guarding New York Harbor and by large expatriate communities such as the United Nations headquartered there. Just minutes from the multimillion-dollar two-bedroom co-op apartments of Park Avenue, though, lies some of the most dire urban poverty in America. But the attendant crime that affects New Yorkers and visitors alike has seen a continued dramatic reduction from 1993 to 2004—NYC has a murder rate half that of cities such as Los Angeles and Chicago, in part as the result of a concerted effort by local agencies. But for all its eight million residents, New York remains a city of neighborhoods, whether its avant-garde Greenwich Village, bustling Harlem, the ultra-sophisticated TriBeCa, or one of the ethnic enclaves such as Little Italy or Chinatown. And a cleaner, brighter, safer New York is attracting people from around the world who are coming to enjoy the citys renaissance.',
+                    'The New York City.',
                     'article content')
 flags.DEFINE_list('question_list', ['where is New York City'], 'question list')
 flags.DEFINE_string('context_path', '', 'article context path')
