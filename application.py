@@ -96,6 +96,8 @@ def with_context():
                 'context_list': [context]
             }
             
+            print(qas)
+            
             results = inference.response(qas=qas)
             answer, score = results[0]
             
