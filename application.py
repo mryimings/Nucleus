@@ -14,7 +14,9 @@ inference = Inference()
 
 app = Flask(__name__)
 database = db()
-keyword_topk = 5
+KEYWORD_TOP_K = 5
+MIN_ANSWER_SCORE = 5
+
 
 CONTEXT_RELATED_THRESHOLD = 5.0
 
@@ -145,19 +147,20 @@ def without_context():
             max_score = float("-inf")
             final_context = ""
             
-            print("************* begin printing result *******************")
+            # print("************* begin printing result *******************")
             for i, result in enumerate(results):
                 answer, score = result
-                print(i)
-                print(score)
-                print(answer)
-                print("********************************************************")
-                if score > max_score:
+                # print(i)
+                # print(score)
+                # print(answer)
+                # print("********************************************************")
+                
+                if score > max_score and answer:
                     final_answer = answer
                     max_score = score
                     final_context = context_list[i // 3]
             
-            if not final_answer:
+            if not final_answer or max_score < MIN_ANSWER_SCORE:
                 return redirect(url_for('result_no_answer'))
 
             user_id = database.get_id_by_name(session['username'])
