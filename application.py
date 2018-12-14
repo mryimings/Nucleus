@@ -1,6 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, session, request
-import logging
-from logging.handlers import RotatingFileHandler
+from flask import Flask, render_template, redirect, url_for, session, request
 from warrant import Cognito
 from config import cognito_userpool_id, cognito_app_client_id
 from models.bert.inference_bert import Inference
