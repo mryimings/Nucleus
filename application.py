@@ -3,7 +3,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from warrant import Cognito
 from config import cognito_userpool_id, cognito_app_client_id
-from models.r_net.inference import Inference
+from models.bert.inference_bert import Inference
 import wikipedia
 from rake_nltk import Rake
 from database.db_update_class import db
@@ -14,6 +14,7 @@ inference = Inference()
 
 app = Flask(__name__)
 database = db()
+keyword_topk = 5
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -80,20 +81,25 @@ def welcome():
     else:
         return redirect(url_for('login'))
 
+
 @app.route('/with_context', methods=['GET', 'POST'])
 def with_context():
     if 'username' in session:
         if request.method == 'POST':
             user_id = database.get_id_by_name(session['username'])
-            keyword = str(datetime.now())
-            database.update(user_id,keyword,request.form['passage'],request.form['question'])
+            database.update(user_id, str(datetime.now()), request.form['passage'], request.form['question'])
+            
             question = request.form['question']
             passage = request.form['passage']
-            answer = inference.response(context=passage, question=question)
+            result = inference.response(qas={"question": question,
+                                             "context_list": [passage]})
+            answer, _ = result[0][0], result[0][1]
+            
             return redirect(url_for('result', question=question, answer=answer))
         return render_template('with_context.html', username=session['username'])
     else:
         return redirect(url_for('login'))
+
 
 @app.route('/without_context', methods=['GET', 'POST'])
 def without_context():
@@ -101,19 +107,51 @@ def without_context():
         if request.method == 'POST':
             rake = Rake()
             rake.extract_keywords_from_text(request.form['question'])
-            keywords = rake.get_ranked_phrases()
-            keyword = keywords[0]
-            try:
-                passage = wikipedia.page(keyword).summary
-            except PageError as e:
-                print(e)
+            keywords = rake.get_ranked_phrases()[:keyword_topk]
+            context_list = []
+            for keyword in keywords:
+                try:
+                    passage = wikipedia.page(keyword).summary
+                except PageError as e:
+                    print("page not fund")
+                    print(e)
+                    continue
+                context_list += get_context_list(passage)
+            
+            if not context_list:
                 return redirect(url_for('result_no_answer'))
-            answer = inference.response(passage, question=request.form['question'])
+            
+            feed_dict = {"question": request.form["question"], "context_list": context_list}
+            results = inference.response(qas=feed_dict)
+            final_answer = ""
+            max_score = float("-inf")
+            final_passage = ""
+            for i, result in enumerate(results):
+                answer, score = result
+                if score > max_score:
+                    max_score = score
+                    final_answer = answer
+                    final_passage = context_list[(i // 3)]
+            
+            if not final_answer:
+                return redirect(url_for('result_no_answer'))
+            
+            print("******************** Begins Logging **************************")
+            
+            for i, context in enumerate(context_list):
+                print("context {}".format(str(i)))
+                print(context)
+            
+            for i, result in enumerate(results):
+                print('result {} for context {}'.format(str(i), str(i // 3)))
+                print("score {}".format(str(result[1])))
+                print("answer {}".format(str(result[0])))
+            
             user_id = database.get_id_by_name(session['username'])
-            database.update(user_id,keyword,passage,request.form['question'])
-            if not answer:
-                return redirect(url_for('result_no_answer'))
-            return redirect(url_for('result', question=request.form['question'], answer=answer))
+            database.update(user_id, str(datetime.now()), final_passage, request.form['question'])
+            
+            return redirect(url_for('result', question=request.form['question'], answer=final_answer))
+        
         else:
             return render_template('without_context.html', username=session['username'])
     else:
@@ -161,6 +199,7 @@ def feedback(question=None, answer=None):
     else:
         return render_template('feedback.html', username=session['username'], question=question, answer=answer)
     
+    
 @app.route('/thankyou', methods=['GET'])
 def thankyou():
     if 'username' not in session:
@@ -182,8 +221,9 @@ def get_context_list(context, min_len=700):
     p1, p2 = 0, 0
     while p2 < len(context):
         p2 += min_len
-        while p2 < len(context) and p2 != '.':
+        while p2 < len(context) and context[p2] != '.':
             p2 += 1
+        p2 += 1
         context_list.append(context[p1:p2])
         p1 = p2
     return context_list
