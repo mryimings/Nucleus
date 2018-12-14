@@ -12,6 +12,7 @@ In context-free mode, things become more interesting. At the very beginning we o
 
 In context-free mode, you don't need to provide a context, we do this for you - we use abundant wikipedia API to search the most possible page that may contain answer. Calling multiple APIs including Wikipedia API, rake_nltk, etc.
 
+If you have any questions during the installation or operation of Nucleus, please feel free to open an issue.
 
   
 ## Get Started
