@@ -761,7 +761,7 @@ def write_predictions(all_examples, all_features, all_results, n_best_size, max_
 
     res = []
     for key in all_nbest_json:
-        for k in range(n_best_size):
+        for k in range(min(n_best_size,len(all_nbest_json[key]))):
             res.append((all_nbest_json[key][k]["text"],all_nbest_json[key][k]["scores"]))
     return res
 
