@@ -180,7 +180,7 @@ def result_no_answer():
     else:
         return redirect(url_for('login'))
 
-@app.route('/history', methods=['GET', 'POST'])
+@app.route('/history', methods=['GET'])
 def history():
     if 'username' in session:
         requested_history = database.get_history_list(name=session['username'], limit=5)
@@ -189,6 +189,24 @@ def history():
         return render_template('history.html', username=session['username'], requested_history=requested_history)
     else:
         return redirect(url_for('login'))
+    
+@app.route('/history/<cnt>', methods=['GET'])
+def history_count(cnt=5):
+    if 'username' in session:
+        requested_history = database.get_history_list(name=session['username'], limit=cnt)
+        if requested_history == -1:
+            requested_history = [("This will not be shown", "You do not have any question history now", "Go to ask Nucleus something!")]
+        return render_template('history_count.html', username=session['username'], requested_history=requested_history)
+    else:
+        return redirect(url_for('login'))
+    
+@app.route('/history_redirect', methods=['GET', 'POST'])
+def history_redirect():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        return redirect(url_for('history_count', cnt=request.form['cnt']))
+    return render_template('history_redirect.html', username=session['username'])
     
 @app.route('/feedback/<question>/<answer>', methods=['GET', 'POST'])
 def feedback(question=None, answer=None):
