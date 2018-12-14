@@ -44,7 +44,7 @@ def signup():
             cognito.add_base_attributes(email=request.form['email'])
             try:
                 cognito.register(username=request.form['username'], password=request.form['password'])
-                # user_id = database.add_user(request.form['username'],request.form['password'],request.form['email'])
+                _ = database.add_user(request.form['username'],request.form['password'],request.form['email'])
             except Exception as e:
                 print(e)
                 error = str(e)
