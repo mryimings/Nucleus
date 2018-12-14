@@ -1,10 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<title>Connective Login Form a Responsive Widget Template :: w3layouts</title>
+<!-- meta_tags-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="connective login form a Flat Responsive Widget,Login form widgets, Sign up Web forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+function hideURLbar(){ window.scrollTo(0,1); } </script>
+ Meta_tag_Keywords
+<link href="{{ url_for('static', filename='css/context_style.css')}}" rel="stylesheet" type="text/css" media="all"><!--style_sheet-->
+<link href="{{ url_for('static', filename='css/font-awesome.min.css')}}" rel="stylesheet" type="text/css" media="all"><!--font_awesome_icons-->
+<!--web_fonts-->
+<link href="//fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900&amp;subset=latin-ext" rel="stylesheet">
+<!--//web_fonts-->
+<style>
+.collapsible {
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.active, .collapsible:hover {
+  background-color: #555;
+}
+
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+</style>
 </head>
 <body>
 
+<p>A Collapsible:</p>
+<button class="collapsible">Open Collapsible</button>
+<div class="content">
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+</div>
+
+<div class="form">
+<h1>Nucleus</h1>
+	<div class="form-content">
+		<form action="{{ url_for('history') }}">
+			<div class="form-info">
+				<h2><font size="4">Welcome, {{username}}!
+                </font></h2>
+			</div>
+
+
+            <div>
+                <button class="collapsible">Open Section 1</button>
+                <div class="content">
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+            </div>
+
+
+            <!--<div class="form-content">-->
+                <!--<textarea class="email-w3l" type="text" cols="120" rows="12" name="question" placeholder="Type in or copy the question here." required=""></textarea>-->
+            <!--</div>-->
+            <!--<div class="submit-agileits">-->
+                <!--<center><input class="login" align="middle" type="submit" value="submit" onsubmit=url_for('result')></center>-->
+			<!--</div>-->
+
+
+			<div class="form-check">
+				<div class="left">
+					<!--<input type="checkbox" value="Remember me">Remember me-->
+					<a href="{{ url_for('logout') }}"><font color="white">Logout</font></a>
+				</div>
+				<div class="right" align="right">
+                    <a href="{{ url_for('welcome') }}"><font color="white">Back</font></a>
+				</div>
+				<div class="clear"></div>
+			</div>
+
+		</form>
+	</div>
+</div>
+<!---728x90--->
+<!--<footer>&copy; 2018 Connective login form. All rights reserved | Design by <a href="#">W3layouts</a></footer>-->
+<!---728x90--->
+
+<script>
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+</script>
 </body>
 </html>

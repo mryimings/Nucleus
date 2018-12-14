@@ -139,13 +139,10 @@ def result_no_answer(question=""):
 @app.route('/history', methods=['GET', 'POST'])
 def history():
     if 'username' in session:
-        if request.method == 'POST':
-            num = request.form['num']
-            requested_history = database.get_history_list(name=session['username'], limit=num)
-            # TODO: send history to frontend
-            return "TO DO"
-        else:
-            return render_template('history.html', username=session['username'])
+
+        # num = request.form['num']
+        requested_history = database.get_history_list(name=session['username'], limit=5)
+        return render_template('history.html', username=session['username'], hist=requested_history)
     else:
         return redirect(url_for('login'))
     
