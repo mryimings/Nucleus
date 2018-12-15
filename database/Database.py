@@ -5,7 +5,7 @@ import mysql.connector
 from config import database_endpoint, database_pwd, database_user_name
 
 
-class db():
+class Database():
     def __init__(self):
         self.db = mysql.connector.connect(host=database_endpoint, user=database_user_name, password=database_pwd,
                                           database='HooliASE')

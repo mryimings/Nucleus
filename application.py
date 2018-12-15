@@ -1,22 +1,20 @@
-from flask import Flask, render_template, redirect, url_for, flash, session, request
-import logging
-from logging.handlers import RotatingFileHandler
+from flask import Flask, render_template, redirect, url_for, session, request
 from warrant import Cognito
 from config import cognito_userpool_id, cognito_app_client_id
 from models.bert.inference_bert import Inference
 import wikipedia
 from rake_nltk import Rake
-from database.db_update_class import db
+from database.Database import Database
 from datetime import datetime
 from wikipedia.exceptions import PageError
 
 inference = Inference()
 
 app = Flask(__name__)
-database = db()
+database = Database()
 KEYWORD_TOP_K = 5
-MIN_ANSWER_SCORE = 3
-
+MIN_ANSWER_SCORE = 0
+keyword_topk = 5
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -35,7 +33,6 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
 
-
 @app.route('/signup', methods=['GET', "POST"])
 def signup():
     error = None
@@ -47,7 +44,7 @@ def signup():
             cognito.add_base_attributes(email=request.form['email'])
             try:
                 cognito.register(username=request.form['username'], password=request.form['password'])
-                user_id = database.add_user(request.form['username'],request.form['password'],request.form['email'])
+                _ = database.add_user(request.form['username'],request.form['password'],request.form['email'])
             except Exception as e:
                 print(e)
                 error = str(e)
@@ -55,7 +52,6 @@ def signup():
             session['username'] = request.form['username']
             return redirect(url_for('verification'))
     return render_template('signup.html', error=error)
-
 
 @app.route('/verification', methods=['GET', 'POST'])
 def verification():
@@ -75,7 +71,6 @@ def verification():
     else:
         return redirect(url_for('login'))
 
-
 @app.route('/', methods=['GET', 'POST'])
 def welcome():
     if 'username' in session:
@@ -83,22 +78,25 @@ def welcome():
     else:
         return redirect(url_for('login'))
 
-
 @app.route('/with_context', methods=['GET', 'POST'])
 def with_context():
     if 'username' in session:
         if request.method == 'POST':
             
             question = request.form['question']
+            if not question.endswith('?'):
+                question += '?'
+            
             context = request.form['passage']
             qas = {
                 'question': question,
                 'context_list': [context]
             }
             
-            print(qas)
-            
             results = inference.response(qas=qas)
+            if not results:
+                return redirect(url_for('result_no_answer'))
+            
             answer, score = results[0]
             
             if not answer or score < MIN_ANSWER_SCORE:
@@ -111,7 +109,6 @@ def with_context():
         return render_template('with_context.html', username=session['username'])
     else:
         return redirect(url_for('login'))
-
 
 @app.route('/without_context', methods=['GET', 'POST'])
 def without_context():
@@ -137,31 +134,20 @@ def without_context():
             
             if not context_list:
                 return redirect(url_for('result_no_answer'))
-                
-            print("************** begin printing context list *******************")
-            for context in context_list:
-                print(context)
             
             qas = {
                 'question': question,
                 'context_list': context_list
             }
             
-            print(qas)
-            
             results = inference.response(qas=qas)
             
             final_answer = ""
             max_score = float("-inf")
             final_context = ""
-            
-            print("************* begin printing result *******************")
+
             for i, result in enumerate(results):
                 answer, score = result
-                print(i)
-                print(score)
-                print(answer)
-                print("********************************************************")
                 
                 if score > max_score and answer:
                     final_answer = answer
@@ -183,33 +169,44 @@ def without_context():
 @app.route('/result/<question>/<answer>', methods=['GET', 'POST'])
 def result(question="", answer=""):
     if 'username' in session:
-        print("Question", question)
-        print("Answer", answer)
-        return render_template('result.html', username=session['username'], question=question, answer=answer)
+        return render_template('result_with_context.html', username=session['username'], question=question, answer=answer)
     else:
         return redirect(url_for('login'))
     
 @app.route('/result_no_answer/', methods=['GET', 'POST'])
-def result_no_answer(question=""):
+def result_no_answer():
     if 'username' in session:
-        print("Question", question)
         return render_template('result_no_answer.html', username=session['username'])
     else:
         return redirect(url_for('login'))
 
-@app.route('/history', methods=['GET', 'POST'])
+@app.route('/history', methods=['GET'])
 def history():
     if 'username' in session:
-        if request.method == 'POST':
-            num = request.form['num']
-            requested_history = database.get_history_list(name=session['username'], limit=num)
-            # TODO: send history to frontend
-            return "TO DO"
-        else:
-            return render_template('history.html', username=session['username'])
+        requested_history = database.get_history_list(name=session['username'], limit=5)
+        if requested_history == -1:
+            requested_history = [("This will not be shown", "You do not have any question history now", "Go to ask Nucleus something!")]
+        return render_template('history.html', username=session['username'], requested_history=requested_history)
     else:
         return redirect(url_for('login'))
     
+@app.route('/history/<cnt>', methods=['GET'])
+def history_count(cnt=5):
+    if 'username' in session:
+        requested_history = database.get_history_list(name=session['username'], limit=cnt)
+        if requested_history == -1:
+            requested_history = [("This will not be shown", "You do not have any question history now", "Go to ask Nucleus something!")]
+        return render_template('history_count.html', username=session['username'], requested_history=requested_history)
+    else:
+        return redirect(url_for('login'))
+    
+@app.route('/history_redirect', methods=['GET', 'POST'])
+def history_redirect():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        return redirect(url_for('history_count', cnt=request.form['cnt']))
+    return render_template('history_redirect.html', username=session['username'])
     
 @app.route('/feedback/<question>/<answer>', methods=['GET', 'POST'])
 def feedback(question=None, answer=None):
@@ -221,7 +218,6 @@ def feedback(question=None, answer=None):
         return redirect(url_for("thankyou", username=session['username']))
     else:
         return render_template('feedback.html', username=session['username'], question=question, answer=answer)
-    
     
 @app.route('/thankyou', methods=['GET'])
 def thankyou():
@@ -237,7 +233,6 @@ def valid_login(username, password):
         print(e)
         return False
     return True
-
 
 def get_context_list(context, min_len=700):
     context_list = []
@@ -256,5 +251,4 @@ if __name__ == '__main__':
     app.debug = True
     app.secret_key = '\xe3-\xe1\xf7\xfb\x91\xb1\x8c\xae\xf2\xc1BH\xe0/K~~%>ac\t\x01'
     app.run()
-    
     

@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" >
 <head>
+
 <title>Connective Login Form a Responsive Widget Template :: w3layouts</title>
 <!-- meta_tags-->
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="keywords" content="connective login form a Flat Responsive Widget,Login form widgets, Sign up Web forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements" />
@@ -13,36 +15,82 @@ function hideURLbar(){ window.scrollTo(0,1); } </script>
 <link href="{{ url_for('static', filename='css/font-awesome.min.css')}}" rel="stylesheet" type="text/css" media="all"><!--font_awesome_icons-->
 <!--web_fonts-->
 <link href="//fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900&amp;subset=latin-ext" rel="stylesheet">
+
+
+<link href="{{ url_for('static', filename='css/star.css')}}" rel="stylesheet" type="text/css" media="all">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" rel="stylesheet" type="text/css" media="all">
+
 <!--//web_fonts-->
+<style>
+select {
+
+text-align-last: center;
+padding-right: 29px;
+
+}
+	select#soflow,
+select#soflow-color {
+  -webkit-appearance: button;
+  -webkit-border-radius: 2px;
+  -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  -webkit-padding-end: 20px;
+  -webkit-padding-start: 2px;
+  -webkit-user-select: none;
+  background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+  background-position: 97% center;
+  background-repeat: no-repeat;
+  border: 1px solid #AAA;
+  color: #555;
+  font-size: inherit;
+  margin: 20px;
+  overflow: hidden;
+  padding: 5px 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 300px;
+}
+select#soflow-color {
+  color: #fff;
+  background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#779126, #779126 40%, #779126);
+  background-color: #779126;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  padding-left: 15px;
+}
+</style>
 </head>
 <body>
+
 <div class="form">
 <h1>Nucleus</h1>
+
 	<div class="form-content">
 		<form action="{{ url_for('feedback', question=question, answer=answer) }}" method="post">
 			<div class="form-info">
-				<h2>Please input your expected answer and score for our answer, 0 is worst and 10 is best:</h2>
+				<h2>Please rate our answer, and provide your expected answer. Thank you!</h2>
 			</div>
+
+			<center><select name="score" id="soflow">
+				<option value=10>10 for the best</option>
+				<option value=9>9</option>
+				<option value=8>8</option>
+				<option value=7>7</option>
+				<option value=6>6</option>
+				<option value=5>5</option>
+				<option value=4>4</option>
+				<option value=3>3</option>
+				<option value=2>2</option>
+				<option value=1>1</option>
+				<option value=0>0 for the worst</option>
+			</select></center>
 
             <div class="form-content">
                 <textarea class="email-w3l" type="text" cols="120" rows="12" name="expected_answer" placeholder="Type your expected answer here" required=""></textarea>
             </div>
-            <!--<div class="form-content">-->
-                <!--<textarea class="email-w3l" type="text" cols="120" rows="12" name="score" placeholder="Type your score here" required=""></textarea>-->
-            <!--</div>-->
-			<select name="score">
-				<option value=0>0</option>
-				<option value=1>1</option>
-				<option value=2>2</option>
-				<option value=3>3</option>
-				<option value=4>4</option>
-				<option value=5>5</option>
-				<option value=6>6</option>
-				<option value=7>7</option>
-				<option value=8>8</option>
-				<option value=9>9</option>
-				<option value=10>10</option>
-			</select>
+
+
+
             <div class="submit-agileits">
                 <center><input class="login" align="middle" type="submit" value="submit" onsubmit=url_for('welcome')></center>
 			</div>

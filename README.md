@@ -12,6 +12,7 @@ In context-free mode, things become more interesting. At the very beginning we o
 
 In context-free mode, you don't need to provide a context, we do this for you - we use abundant wikipedia API to search the most possible page that may contain answer. Calling multiple APIs including Wikipedia API, rake_nltk, etc.
 
+If you have any questions during the installation or operation of Nucleus, please feel free to open an issue.
 
   
 ## Get Started
@@ -39,7 +40,9 @@ database_pwd = <your_database_password>
 
 ### Find model
 
-Download the model via `https://1drv.ms/f/s!AtfKeiTxgnoqjt0M3lrLoowcsjbKcA`, name the whole dir as `model_data`, and put it to `<root>/models/bert`
+Download the model via `https://1drv.ms/f/s!AtfKeiTxgnoqjt0M3lrLoowcsjbKcA`, name the whole dir as `model_data`, and put it to `<root>/models/bert` Please note that the r_net mode is now deprecated. You can try it if you want or you only have limited computation resources.
+
+If you cannot download the model, please contact us at `ys3031@columbia.edu`
 
 ### Test cases
 
@@ -85,3 +88,13 @@ The basic workflow of our context-free mode is:
 4. we split these pages into a list of paragraphs, each of which is about 700 characters long;
 5. we put the list of paragraphs as contexts and the question into BERT model, and the model returns an answer and a confidence for each of question-context pair;
 6. we select the answer with the best confidence, and return it to the user.
+
+## Reference
+
+https://github.com/google-research/bert
+https://github.com/HKUST-KnowComp/R-Net
+https://github.com/tensorflow/tensorflow
+https://github.com/pallets/flask
+https://github.com/goldsmith/Wikipedia
+https://github.com/capless/warrant
+https://github.com/csurfer/rake-nltk

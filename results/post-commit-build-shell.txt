@@ -7,6 +7,7 @@ python database/test_database.py
 coverage run models/r_net/inference.py
 coverage run -a models/r_net/inference.py --inference_mode customized --context_path ./testcases/contexts/0 --questions_path ./testcases/questions/0
 coverage run -a test/test_database.py
-coverage html config.py database/db_update_class.py models/r_net/func.py models/r_net/inference.py models/r_net/prepro.py test/test_database.py
+Coverage run -a test/test_bert.py 
+coverage html
 coverage report > coverage_report.txt
 deactivate

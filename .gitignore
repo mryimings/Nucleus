@@ -18,6 +18,8 @@ models/bert/model_data
 models/bert/.idea
 models/bert/sample_text.txt
 
+draft.py
+
 # C extensions
 *.so
 

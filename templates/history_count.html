@@ -6,40 +6,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="keywords" content="connective login form a Flat Responsive Widget,Login form widgets, Sign up Web forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements" />
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
 function hideURLbar(){ window.scrollTo(0,1); } </script>
-<!-- Meta_tag_Keywords -->
+ Meta_tag_Keywords
 <link href="{{ url_for('static', filename='css/context_style.css')}}" rel="stylesheet" type="text/css" media="all"><!--style_sheet-->
 <link href="{{ url_for('static', filename='css/font-awesome.min.css')}}" rel="stylesheet" type="text/css" media="all"><!--font_awesome_icons-->
 <!--web_fonts-->
 <link href="//fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900&amp;subset=latin-ext" rel="stylesheet">
-<!--//web_fonts-->
 </head>
 <body>
+
+
+
 <div class="form">
 <h1>Nucleus</h1>
 	<div class="form-content">
-		<form action="{{ url_for('with_context') }}" method="post">
-			<div class="form-info">
-				<h2>Please input the article and the question:</h2>
-			</div>
-			<!--<div class="email-w3l">-->
-				<!--<span class="i1"><i class="fa fa-user-o" aria-hidden="true"></i></span>-->
-                <!--<input class="email" type="text" name="username" placeholder="Username" required="">-->
-			<!--</div>-->
-			<div class="form-content">
-                <textarea class="email-w3l" type="text" cols="120" rows="12" name="question" placeholder="Type in or copy the question here." required=""></textarea>
-            </div>
-            <div class="form-content">
-                <textarea class="email-w3l" type="text" cols="120" rows="12" name="passage" placeholder="Type in or copy the article here." required=""></textarea>
-            </div>
 
-            <div class="submit-agileits">
-                <center><input class="login" align="middle" type="submit" value="submit"></center>
+		<form action="{{ url_for('history') }}">
+
+
+			<div class="form-info">
+				<h2><font size="4">Welcome, {{username}}!
+                </font></h2>
 			</div>
+
+
+			<div class="container">
+				<!--<h2><font size="4" color="#87cefa">Asking history: </font></h2>-->
+				<div class="email-w3l">
+					{% for hist in requested_history %}
+					<li><strong><font size="8" color="aqua">{{ hist[1] }}</font></strong></li><br />
+					<li><font size="8" color="#87cefa">{{ hist[2] }}</font></li><br />
+					{% endfor %}
+				</div>
+
+			</div>
+
+
 			<div class="form-check">
 				<div class="left">
-					<!--<input type="checkbox" value="Remember me">Remember me-->
 					<a href="{{ url_for('logout') }}"><font color="white">Logout</font></a>
 				</div>
 				<div class="right" align="right">
@@ -51,8 +61,7 @@ function hideURLbar(){ window.scrollTo(0,1); } </script>
 		</form>
 	</div>
 </div>
-<!---728x90--->
-<!--<footer>&copy; 2018 Connective login form. All rights reserved | Design by <a href="#">W3layouts</a></footer>-->
-<!---728x90--->
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+  <script  src="js/index.js"></script>
 </body>
 </html>
