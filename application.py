@@ -7,7 +7,7 @@ from rake_nltk import Rake
 from database.Database import Database
 from datetime import datetime
 from wikipedia.exceptions import PageError
-
+# from botocore.errorfactory
 inference = Inference()
 
 app = Flask(__name__)
@@ -46,8 +46,11 @@ def signup():
                 cognito.register(username=request.form['username'], password=request.form['password'])
                 _ = database.add_user(request.form['username'],request.form['password'],request.form['email'])
             except Exception as e:
-                print(e)
-                error = str(e)
+                
+                if e.response['Error']['Code'] == 'UsernameExistsException':
+                    error = 'User Already Exists!'
+                else:
+                    error = 'Unexpected Error: {}'.format(e.response['Error']['Message'])
                 return render_template('signup.html', error=error)
             session['username'] = request.form['username']
             return redirect(url_for('verification'))
